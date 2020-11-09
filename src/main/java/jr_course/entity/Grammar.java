@@ -31,7 +31,7 @@ public class Grammar {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Collection<User> userCollection;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "grammar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Collection<Exercise> exerciseCollection;
 
     public Grammar() {}
