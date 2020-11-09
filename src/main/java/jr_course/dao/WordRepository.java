@@ -9,7 +9,7 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
 
 
 	public List<Word> findAll();
-//	public List<Word> findAllByLevelContains(String level);
+//	public List<Word> findAllByLevelContai	ns(String level);
 //
 //	public List<Word> findByJpKanjiContainsOrJpKanaContainsOrRuWordContainsAllIgnoreCase(
 //								String kanji, String kana, String ru);
