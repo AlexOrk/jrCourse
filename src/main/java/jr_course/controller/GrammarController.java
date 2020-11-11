@@ -60,6 +60,8 @@ public class GrammarController {
         } catch (IOException e) {
             logger.debug(e.getMessage());
             e.printStackTrace();
+        } finally {
+            reader.close();
         }
         grammarService.save(grammar);
         logger.info("Grammar was saved!");

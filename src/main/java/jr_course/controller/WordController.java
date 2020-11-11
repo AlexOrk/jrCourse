@@ -63,6 +63,8 @@ public class WordController {
         } catch (IOException e) {
             logger.debug(e.getMessage());
             e.printStackTrace();
+        } finally {
+            reader.close();
         }
         wordService.save(word);
         logger.info("Word was saved!");
