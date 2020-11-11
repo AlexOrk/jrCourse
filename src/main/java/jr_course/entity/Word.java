@@ -14,7 +14,7 @@ public class Word {
 	private int id;
 
 	@Column(name="level")
-	private int level;
+	private String level;
 
 	@Column(name="jp_kanji")
 	private String jpKanji;
@@ -38,7 +38,7 @@ public class Word {
 
 	public Word() {}
 
-	public Word(int level, String jpKanji, String jpKana, String ruWord, String description,
+	public Word(String level, String jpKanji, String jpKana, String ruWord, String description,
 				List<User> userCollection) {
 		this.level = level;
 		this.jpKanji = jpKanji;
@@ -67,11 +67,11 @@ public class Word {
 		this.id = id;
 	}
 
-	public int getLevel() {
+	public String getLevel() {
 		return level;
 	}
 
-	public void setLevel(int level) {
+	public void setLevel(String level) {
 		this.level = level;
 	}
 
