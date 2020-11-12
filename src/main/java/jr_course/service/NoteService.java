@@ -8,7 +8,7 @@ public interface NoteService {
 
     public List<Note> findAllByUser_Id(int id);
 
-    public void save(Note employee);
+    public void save(Note note);
 
     public void deleteById(int id);
 }

@@ -1,12 +1,15 @@
 package jr_course.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name="word")
-public class Word {
+public class Word implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -33,6 +36,7 @@ public class Word {
 	@JoinTable(name = "word_user",
 			joinColumns = @JoinColumn(name = "word_id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id"))
+	@JsonIgnore
 	private List<User> userCollection;
 
 

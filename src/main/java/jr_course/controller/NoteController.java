@@ -2,6 +2,7 @@ package jr_course.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jr_course.entity.Note;
+import jr_course.entity.User;
 import jr_course.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,22 +19,24 @@ public class NoteController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
     private NoteService noteService;
+    private UserService userService;
 
     @Autowired
-    public NoteController(NoteService noteService) {
+    public NoteController(NoteService noteService, UserService userService) {
         this.noteService = noteService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
     public List<Note> showNotes(@RequestParam("userId") int userId) {
-        logger.info("\"/personal/notes?userId=" + userId + "\"");
+        logger.info("\"/notes/?userId=" + userId + "\"");
 
         return noteService.findAllByUser_Id(userId);
     }
 
     @PostMapping("/save")
-    public Note saveNote(@RequestBody String body) {
-        logger.info("\"/personal/saveNote\"");
+    public Note saveNote(@RequestBody String body, @RequestParam("userId") int userId) {
+        logger.info("\"/notes/saveNote\"");
 
         ObjectMapper mapper = new ObjectMapper();
         StringReader reader = new StringReader(body);
@@ -46,6 +49,9 @@ public class NoteController {
             logger.debug(e.getMessage());
             e.printStackTrace();
         }
+
+        User user = userService.findById(userId);
+        note.setUser(user);
         noteService.save(note);
         logger.info("Note was saved!");
         return note;

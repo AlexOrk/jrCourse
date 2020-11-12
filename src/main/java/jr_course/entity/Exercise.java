@@ -1,10 +1,11 @@
 package jr_course.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="exercise")
-public class Exercise {
+public class Exercise implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -22,6 +23,7 @@ public class Exercise {
 
 	@ManyToOne
 	@JoinColumn(name = "grammar_id", nullable = false)
+
 	private Grammar grammar;
 
 	public Exercise() {}

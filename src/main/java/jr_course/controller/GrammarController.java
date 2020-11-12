@@ -2,7 +2,9 @@ package jr_course.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jr_course.entity.Grammar;
+import jr_course.entity.User;
 import jr_course.service.GrammarService;
+import jr_course.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +20,12 @@ public class GrammarController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
     private GrammarService grammarService;
+    private UserService userService;
 
     @Autowired
-    public GrammarController(GrammarService grammarService) {
+    public GrammarController(GrammarService grammarService, UserService userService) {
         this.grammarService = grammarService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -35,15 +39,8 @@ public class GrammarController {
     public List<Grammar> showGrammarByLevel(@PathVariable int lvl) {
         logger.info("\"/grammar/lvl/" + lvl + "\"");
 
-        return grammarService.findByLevel(lvl);
+        return grammarService.findAllByLevel(lvl);
     }
-
-//    @GetMapping("/grammar")
-//    public Grammar getGrammarById(@RequestParam("grammarId") int grammarId) {
-//        logger.info("\"/words/getWord?grammarId=" + grammarId + "\"");
-//
-//        return grammarService.findById(grammarId);
-//    }
 
     @PostMapping("/save")
     public Grammar saveGrammar(@RequestBody String body) {
@@ -78,13 +75,87 @@ public class GrammarController {
         logger.info("Return all grammar.");
         return grammarService.findAll();
     }
+
+    @GetMapping("/search")
+    public List<Grammar> searchGrammar(@RequestParam(value = "param", required = false) String param,
+                                       @RequestParam("userId") int userId) {
+        logger.info("\"/grammar/search?param=" + param + "&userId=" + userId + "\"");
+
+        if (param == null || param.trim().isEmpty()) {
+            logger.info("Return all words.");
+            return grammarService.findAll();
+        }
+
+        logger.info("Return words with an input parameter.");
+        return grammarService.findByDifferentParameters(param);
+    }
+
+    @GetMapping("/search/lvl/{lvl}")
+    public List<Grammar> searchGrammarByLevel(@RequestParam(value = "param", required = false) String param,
+                                              @PathVariable int lvl, @RequestParam("userId") int userId) {
+        logger.info("\"/grammar/search/lvl/" + lvl + "?param=" + param + "&userId=" + userId + "\"");
+
+        if (param == null || param.trim().isEmpty()) {
+            logger.info("Return all words with level " + lvl + ".");
+            return grammarService.findAllByLevel(lvl);
+        }
+
+        logger.info("Return words with an input parameter and level.");
+        return grammarService.findAllByParamAndLevel(param, lvl);
+    }
+
+    // post?
+    @GetMapping("/addGrammarInPersonal")
+    public List<Grammar> addGrammarInPersonal(@RequestParam("grammarId") int grammarId,
+                                        @RequestParam(value = "lvl", required = false) Integer lvl,
+                                        @RequestParam("userId") int userId) {
+        logger.info("\"/grammar/addGrammarInPersonal?grammarId=" + grammarId + "&lvl=" + lvl + "&userId=" + userId + "\"");
+        logger.info("Add a grammar in personal grammar list.");
+
+        User user = userService.findById(userId);
+
+        grammarService.addGrammarInPersonalList(user, grammarId);
+
+        if (lvl != null) {
+            logger.info("Grammar was on the lvl page, redirect to the lvl page.");
+            return grammarService.findAllByLevel(lvl);
+        }
+
+        logger.info("Return all grammar.");
+        return grammarService.findAll();
+    }
+
+    @DeleteMapping("/deleteGrammarFromPersonal")
+    public List<Grammar> deleteGrammarFromPersonal(@RequestParam("grammarId") int grammarId,
+                                             @RequestParam(value = "lvl", required = false) Integer lvl,
+                                             @RequestParam("userId") int userId) {
+        logger.info("\"deleteGrammarFromPersonal?grammarId=" + grammarId + "&lvl=" + lvl + "&userId=" + userId + "\"");
+        logger.info("Delete word from personal grammar list.");
+
+        User user = userService.findById(userId);
+
+        grammarService.deleteGrammarFromPersonalList(grammarId, user);
+
+        logger.info("Grammar was deleted from personal grammar list!");
+
+        if (lvl != null) {
+            logger.info("Grammar was on the lvl page, redirect to the lvl page.");
+            return grammarService.findAllByLevel(lvl);
+        }
+
+        logger.info("Return all grammar.");
+        return grammarService.findAll();
+    }
 }
-// SearchGrammar
+
 /*
 Вывести всю грамматику +
 Вывести грамматику определенного уровня +
-Вывести грамматику по id +
 Сохранить новую грамматику +
 Изменить грамматику +
 Удалить грамматику +
+Найти грамматику по указанному параметру +
+Найти грамматику определеного уровня по указанному параметру +
+Добавить представленную в общем списке грамматику в персональный лист +
+Удалить представленную в общем списке грамматику из персонального листа +
  */

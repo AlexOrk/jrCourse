@@ -1,12 +1,15 @@
 package jr_course.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
 @Table(name="grammar")
-public class Grammar {
+public class Grammar implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
@@ -29,9 +32,11 @@ public class Grammar {
     @JoinTable(name = "grammar_user",
             joinColumns = @JoinColumn(name = "grammar_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonIgnore
     private Collection<User> userCollection;
 
     @OneToMany(mappedBy = "grammar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     Collection<Exercise> exerciseCollection;
 
     public Grammar() {}

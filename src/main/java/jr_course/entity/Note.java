@@ -1,12 +1,13 @@
 package jr_course.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 
 @Entity
 @Table(name="note")
-public class Note {
+public class Note implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -14,18 +15,19 @@ public class Note {
 	private int id;
 
 	@Column(name="name")
-	private int name;
+	private String name;
 
 	@Column(name="content")
 	private String content;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
+	@JsonIgnore
 	private User user;
 
 	public Note() {}
 
-	public Note(int name, String content, User user) {
+	public Note(String name, String content, User user) {
 		this.name = name;
 		this.content = content;
 		this.user = user;
@@ -39,11 +41,11 @@ public class Note {
 		this.id = id;
 	}
 
-	public int getName() {
+	public String getName() {
 		return name;
 	}
 
-	public void setName(int name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 

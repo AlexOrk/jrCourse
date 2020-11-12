@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
                     name, name, name);
 
         if (user.isEmpty()) {
-            logger.info("users list is empty.");
+            logger.info("Users list is empty.");
         }
         logger.info("Return users.");
         return user;

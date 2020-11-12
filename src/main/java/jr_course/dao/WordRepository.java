@@ -8,10 +8,8 @@ import java.util.List;
 public interface WordRepository extends JpaRepository<Word, Integer> {
 
 	public List<Word> findAll();
-	public List<Word> findAllByLevelContains(String level);
-
-//	public List<Word> findByJpKanjiContainsOrJpKanaContainsOrRuWordContainsAllIgnoreCase(
-//								String kanji, String kana, String ru);
-//
-//	public List<Word> findAllByUserCollection_Id(int ud);
+	public List<Word> findAllByLevel(String level);
+	public List<Word> findAllByUserCollection_Id(int id);
+	public List<Word> findByJpKanjiContainsOrJpKanaContainsOrRuWordContainsAllIgnoreCase(
+			String kanji, String kana, String ru);
 }
