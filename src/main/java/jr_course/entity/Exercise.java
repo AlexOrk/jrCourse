@@ -23,16 +23,14 @@ public class Exercise implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "grammar_id", nullable = false)
-
 	private Grammar grammar;
 
 	public Exercise() {}
 
-	public Exercise(String description, String task, String answer, Grammar grammar) {
+	public Exercise(String description, String task, String answer) {
 		this.description = description;
 		this.task = task;
 		this.answer = answer;
-		this.grammar = grammar;
 	}
 
 	public int getId() {

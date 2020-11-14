@@ -31,7 +31,7 @@ public class NoteController {
     public List<Note> showNotes(@RequestParam("userId") int userId) {
         logger.info("\"/notes/?userId=" + userId + "\"");
 
-        return noteService.findAllByUser_Id(userId);
+        return noteService.findAllByUserId(userId);
     }
 
     @PostMapping("/save")
@@ -65,7 +65,7 @@ public class NoteController {
 
         logger.info("Note was deleted!");
         logger.info("Return all notes.");
-        return noteService.findAllByUser_Id(userId);
+        return noteService.findAllByUserId(userId);
     }
 }
 /*

@@ -33,42 +33,14 @@ public class PersonalController {
     public List<Word> showWords(@RequestParam("userId") int userId) {
         logger.info("\"/personal/words?userId=" + userId + "\"");
 
-        return wordService.findAllByUserCollection_Id(userId);
+        return wordService.findAllByUserCollectionId(userId);
     }
 
     @GetMapping("/grammar")
     public List<Grammar> showGrammar(@RequestParam("userId") int userId) {
         logger.info("\"/personal/grammar?userId=" + userId + "\"");
 
-        return grammarService.findAllByUserCollection_Id(userId);
-    }
-
-    @GetMapping("/search/words")
-    public List<Word> searchWords(@RequestParam(value = "word", required = false) String word,
-                                  @RequestParam("userId") int userId) {
-        logger.info("\"/personal/search/words?word=" + word + "&userId=" + userId + "\"");
-
-        if (word == null || word.trim().isEmpty()) {
-            logger.info("No word containing the required value or no value. Return all words by user id.");
-            return wordService.findAllByUserCollection_Id(userId);
-        }
-
-        logger.info("Find all words containing the required value by user id.");
-        return wordService.findAllWordsInPersonalVocabulary(userId, word);
-    }
-
-    @GetMapping("/search/grammar")
-    public List<Grammar> searchGrammar(@RequestParam(value = "grammar", required = false) String grammar,
-                                       @RequestParam("userId") int userId) {
-        logger.info("\"/personal/search/grammar?grammar=" + grammar + "&userId=" + userId + "\"");
-
-        if (grammar == null || grammar.trim().isEmpty()) {
-            logger.info("No grammar containing the required value or no value. Return all grammar by user id.");
-            return grammarService.findAllByUserCollection_Id(userId);
-        }
-
-        logger.info("Find all grammar containing the required value by user id.");
-        return grammarService.findAllGrammarInPersonalList(userId, grammar);
+        return grammarService.findAllByUserCollectionId(userId);
     }
 
     @DeleteMapping("/delete/word")
@@ -83,7 +55,7 @@ public class PersonalController {
         wordService.deleteWordFromPersonalVocabulary(wordId, user);
 
         logger.info("Return all words by user id.");
-        return wordService.findAllByUserCollection_Id(userId);
+        return wordService.findAllByUserCollectionId(userId);
     }
 
     @DeleteMapping("/delete/grammar")
@@ -98,7 +70,7 @@ public class PersonalController {
         grammarService.deleteGrammarFromPersonalList(grammarId, user);
 
         logger.info("Return all grammar by user id.");
-        return wordService.findAllByUserCollection_Id(userId);
+        return wordService.findAllByUserCollectionId(userId);
     }
 }
 
@@ -106,8 +78,8 @@ public class PersonalController {
 /*
 Вывести все слова из персонального списка +
 Вывести всю грамматику из персонального списка +
-Найти слова из персонального списка по указанному параметру +
-Найти грамматику из персонального списка по указанному параметру +
+Найти слова из персонального списка по указанному параметру (убрал)
+Найти грамматику из персонального списка по указанному параметру (убрал)
 Удалить слово из персонального списка +
 Удалить грамматику из персонального списка +
  */

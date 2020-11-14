@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +36,7 @@ public class GrammarServiceImpl implements GrammarService {
         return grammarRepository.findAllByLevel(level);
     }
 
+    // getOne?
     @Override
     public Grammar findById(int id) {
         logger.info("\"findById(id)\"");
@@ -71,32 +71,10 @@ public class GrammarServiceImpl implements GrammarService {
     }
 
     @Override
-    public List<Grammar> findAllByUserCollection_Id(int userId) {
+    public List<Grammar> findAllByUserCollectionId(int userId) {
         logger.info("\"findAllByUserCollection_Id(userId)\"");
         logger.info("Find all grammar by user id " + userId + ".");
         return grammarRepository.findAllByUserCollection_Id(userId);
-    }
-
-    @Override
-    public List<Grammar> findAllGrammarInPersonalList(int userId, String grammar) {
-        logger.info("\"findAllGrammarInPersonalList\" method was called.");
-        logger.info("Searching for grammar in the personal list.");
-
-        List<Grammar> personalGrammarList = grammarRepository.findAllByUserCollection_Id(userId);
-        List<Grammar> grammarList = new ArrayList<>();
-
-        for (Grammar g : personalGrammarList) {
-            if (g.getFormula().contains(grammar) || g.getExample().contains(grammar) ||
-                    g.getDescription().contains(grammar)) {
-                grammarList.add(g);
-            }
-        }
-
-        if (grammarList.isEmpty()) {
-            logger.info("grammarList is empty.");
-        }
-        logger.info("Return grammarList.");
-        return grammarList;
     }
 
     @Override
@@ -141,33 +119,5 @@ public class GrammarServiceImpl implements GrammarService {
 
         logger.info("Return grammar list.");
         return grammarList;
-    }
-
-    @Override
-    public List<Grammar> findAllByParamAndLevel(String param, int level) {
-        logger.info("\"findAllByParamAndLevel(param, level)\"");
-        logger.info("Find all grammar by parameter and level.");
-
-        param = param.trim();
-        logger.info("Find grammar by level.");
-        List<Grammar> grammarList = grammarRepository.findAllByLevel(level);
-
-        if (grammarList.isEmpty()) {
-            logger.info("Grammar list is empty.");
-            return grammarList;
-        }
-
-        logger.info("Find grammar by parameter.");
-        List<Grammar> foundedListByGrammarAndLevel = new ArrayList<>();
-        for (Grammar w : grammarList) {
-            if (w.getFormula().contains(param) || w.getExample().contains(param)) {
-                foundedListByGrammarAndLevel.add(w);
-            }
-        }
-
-        if (foundedListByGrammarAndLevel.isEmpty()) logger.info("Founded grammar list is empty.");
-
-        logger.info("Return grammar list.");
-        return foundedListByGrammarAndLevel;
     }
 }

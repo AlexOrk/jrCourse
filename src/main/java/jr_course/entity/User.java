@@ -28,6 +28,9 @@ public class User implements Serializable {
     @Column(name="mail")
     private String mail;
 
+    @Column(name="is_admin")
+    private boolean admin;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                                                    CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(name = "word_user",
@@ -50,22 +53,12 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(String username, String firstname, String lastname, String mail) {
+    public User(String username, String firstname, String lastname, String mail, boolean admin) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.mail = mail;
-    }
-
-    public User(String username, String firstname, String lastname, String mail,
-                Collection<Word> wordCollection, Collection<Grammar> grammarCollection, Collection<Note> noteCollection) {
-        this.username = username;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.mail = mail;
-        this.wordCollection = wordCollection;
-        this.grammarCollection = grammarCollection;
-        this.noteCollection = noteCollection;
+        this.admin = admin;
     }
 
     public void addWordCollection(Word word) {
@@ -124,6 +117,14 @@ public class User implements Serializable {
 
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+    public boolean admin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        admin = admin;
     }
 
     public Collection<Word> getWordCollection() {

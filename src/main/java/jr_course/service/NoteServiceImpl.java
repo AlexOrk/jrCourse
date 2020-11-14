@@ -20,8 +20,8 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> findAllByUser_Id(int id) {
-        logger.info("\"findAllByUser_Id(id)\"");
+    public List<Note> findAllByUserId(int id) {
+        logger.info("\"findAllByUserId(id)\"");
         logger.info("Find all words by user id " + id + ".");
         return noteRepository.findAllByUser_Id(id);
     }

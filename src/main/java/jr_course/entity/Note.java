@@ -27,10 +27,9 @@ public class Note implements Serializable {
 
 	public Note() {}
 
-	public Note(String name, String content, User user) {
+	public Note(String name, String content) {
 		this.name = name;
 		this.content = content;
-		this.user = user;
 	}
 
 	public int getId() {

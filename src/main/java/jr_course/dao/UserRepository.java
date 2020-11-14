@@ -10,14 +10,11 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    public List<User> findAll();
+//    public List<User> findAll();
     public User findById(int id);
-    public List<User> findByUsernameContainsOrFirstnameContainsOrLastnameContainsAllIgnoreCase(
+    public List<User> findAllByAdminFalse();
+    public List<User> findByUsernameContainsAndAdminFalseOrFirstnameContainsAndAdminFalseOrLastnameContainsAndAdminFalseAllIgnoreCase(
             String username, String firstName, String lastName);
 
-    @Transactional
-    @Modifying
-    @Query(value = "delete from User u where not u.id = :id")
-    public void deleteAllExceptAdmin(int id);
-
+    public void deleteAllByAdminFalse();
 }

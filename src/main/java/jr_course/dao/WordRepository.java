@@ -12,4 +12,6 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
 	public List<Word> findAllByUserCollection_Id(int id);
 	public List<Word> findByJpKanjiContainsOrJpKanaContainsOrRuWordContainsAllIgnoreCase(
 			String kanji, String kana, String ru);
+//	public List<Word> findByUserCollection_IdAndJpKanjiContainsOrUserCollection_IdAndJpKanaContainsOrUserCollection_IdAndRuWordContainsAllIgnoreCase(
+//			int id, String kanji, String kana, String ru);
 }

@@ -90,22 +90,7 @@ public class GrammarController {
         return grammarService.findByDifferentParameters(param);
     }
 
-    @GetMapping("/search/lvl/{lvl}")
-    public List<Grammar> searchGrammarByLevel(@RequestParam(value = "param", required = false) String param,
-                                              @PathVariable int lvl, @RequestParam("userId") int userId) {
-        logger.info("\"/grammar/search/lvl/" + lvl + "?param=" + param + "&userId=" + userId + "\"");
-
-        if (param == null || param.trim().isEmpty()) {
-            logger.info("Return all words with level " + lvl + ".");
-            return grammarService.findAllByLevel(lvl);
-        }
-
-        logger.info("Return words with an input parameter and level.");
-        return grammarService.findAllByParamAndLevel(param, lvl);
-    }
-
-    // post?
-    @GetMapping("/addGrammarInPersonal")
+    @PostMapping("/addGrammarInPersonal")
     public List<Grammar> addGrammarInPersonal(@RequestParam("grammarId") int grammarId,
                                         @RequestParam(value = "lvl", required = false) Integer lvl,
                                         @RequestParam("userId") int userId) {
@@ -155,7 +140,6 @@ public class GrammarController {
 Изменить грамматику +
 Удалить грамматику +
 Найти грамматику по указанному параметру +
-Найти грамматику определеного уровня по указанному параметру +
 Добавить представленную в общем списке грамматику в персональный лист +
 Удалить представленную в общем списке грамматику из персонального листа +
  */

@@ -41,14 +41,11 @@ public class Grammar implements Serializable {
 
     public Grammar() {}
 
-    public Grammar(int level, String formula, String example, String description,
-                   Collection<User> userCollection, Collection<Exercise> exerciseCollection) {
+    public Grammar(int level, String formula, String example, String description) {
         this.level = level;
         this.formula = formula;
         this.example = example;
         this.description = description;
-        this.userCollection = userCollection;
-        this.exerciseCollection = exerciseCollection;
     }
 
     public void addUser(User user) {

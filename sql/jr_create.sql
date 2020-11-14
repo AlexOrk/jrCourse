@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `jr_course`.`user` (
   `first_name` VARCHAR(50) NOT NULL,
   `last_name` VARCHAR(50) NOT NULL,
   `mail` VARCHAR(50) NOT NULL,
+  `is_admin` BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 1
@@ -148,7 +149,6 @@ CREATE TABLE IF NOT EXISTS `jr_course`.`exercise` (
   `grammar_id` INT NOT NULL,
   PRIMARY KEY (`id`, `grammar_id`),
   INDEX `fk_exercise_grammar1_idx` (`grammar_id` ASC) VISIBLE,
-  UNIQUE INDEX `description_UNIQUE` (`description` ASC) VISIBLE,
   CONSTRAINT `fk_exercise_grammar1`
     FOREIGN KEY (`grammar_id`)
     REFERENCES `jr_course`.`grammar` (`id`)

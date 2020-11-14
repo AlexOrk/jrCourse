@@ -89,23 +89,7 @@ public class WordController {
         return wordService.findByDifferentParameters(param);
     }
 
-    @GetMapping("/search/lvl/{lvl}")
-    public List<Word> searchWordByLevel(@RequestParam(value = "param", required = false) String param,
-                                        @PathVariable String lvl,
-                                        @RequestParam("userId") int userId) {
-        logger.info("\"/words/search/lvl/" + lvl + "?param=" + param + "&userId=" + userId + "\"");
-
-        if (param == null || param.trim().isEmpty()) {
-            logger.info("Return all words with level " + lvl + ".");
-            return wordService.findAllByLevel(lvl);
-        }
-
-        logger.info("Return words with an input parameter and level.");
-        return wordService.findAllByParamAndLevel(param, lvl);
-    }
-
-    // post?
-    @GetMapping("/addWordInPersonal")
+    @PostMapping("/addWordInPersonal")
     public List<Word> addWordInPersonal(@RequestParam("wordId") int wordId,
                                     @RequestParam(value = "lvl", required = false) String lvl,
                                     @RequestParam("userId") int userId) {
@@ -155,7 +139,6 @@ public class WordController {
 Изменить слово +
 Удалить слово +
 Найти слова по указанному параметру +
-Найти слова определеного уровня по указанному параметру +
 Добавить представленное в общем списке слово в персональный словарь +
 Удалить представленное в общем списке слово из персонального словаря +
  */

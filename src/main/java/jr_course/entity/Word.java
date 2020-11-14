@@ -42,14 +42,12 @@ public class Word implements Serializable {
 
 	public Word() {}
 
-	public Word(String level, String jpKanji, String jpKana, String ruWord, String description,
-				List<User> userCollection) {
+	public Word(String level, String jpKanji, String jpKana, String ruWord, String description) {
 		this.level = level;
 		this.jpKanji = jpKanji;
 		this.jpKana = jpKana;
 		this.ruWord = ruWord;
 		this.description = description;
-		this.userCollection = userCollection;
 	}
 
 	public void addUser(User user) {

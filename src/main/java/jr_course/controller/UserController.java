@@ -24,45 +24,44 @@ public class UserController {
 
     // show all users except admin
     @GetMapping("/showUsers")
-    public List<User> showUsers(@RequestParam("adminId") int adminId) {
-        logger.info("\"/users/showUsers?adminId=" + adminId + "\"");
+    public List<User> showUsers() {
+        logger.info("\"/users/showUsers\"");
 
-        return userService.findAll(adminId);
+        return userService.findAllExceptAdmin();
     }
 
     @DeleteMapping("/delete")
-    public List<User> deleteUser(@RequestParam("userId") int userId, @RequestParam("adminId") int adminId) {
-        logger.info("\"/users/deleteUser?userId=" + userId + "&adminId" + adminId + "\"");
+    public List<User> deleteUser(@RequestParam("userId") int userId) {
+        logger.info("\"/users/deleteUser?userId=" + userId + "\"");
 
         userService.deleteById(userId);
 
         logger.info("User was deleted!");
         logger.info("Return all users.");
-        return userService.findAll(adminId);
+        return userService.findAllExceptAdmin();
     }
 
     @DeleteMapping("/deleteAll")
-    public List<User> deleteAllUsers(@RequestParam("adminId") int adminId) {
-        logger.info("\"/users/deleteAllUsers?adminId=" + adminId + "\"");
+    public List<User> deleteAllUsers() {
+        logger.info("\"/users/deleteAllUsers\"");
 
-        userService.deleteAllExceptAdmin(adminId);
+        userService.deleteAllExceptAdmin();
 
         logger.info("Return all users.");
-        return userService.findAll(adminId);
+        return userService.findAllExceptAdmin();
     }
 
     @GetMapping("/search")
-    public List<User> searchUser(@RequestParam(value = "user", required = false) String user,
-                         @RequestParam("adminId") int adminId) {
-        logger.info("\"/users/searchUser?user=" + user + "&adminId=" + adminId + "\"");
+    public List<User> searchUser(@RequestParam(value = "param", required = false) String param) {
+        logger.info("\"/users/searchUser?param=" + param + "\"");
 
-        if (user == null || user.trim().isEmpty()) {
+        if (param == null || param.trim().isEmpty()) {
             logger.info("Return all users.");
-            return userService.findAll(adminId);
+            return userService.findAllExceptAdmin();
         }
 
-        logger.info("Return user.");
-        return userService.findUser(user);
+        logger.info("Return found users.");
+        return userService.findUsersByParam(param);
     }
 }
 /*
