@@ -8,6 +8,7 @@ import jr_course.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.io.StringReader;
 import java.util.List;
 
 @RestController
-@RequestMapping("/grammar")
+@RequestMapping(value = "/grammar", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class GrammarController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
@@ -28,9 +29,9 @@ public class GrammarController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public List<Grammar> showGrammar() {
-        logger.info("\"/grammar/\"");
+        logger.info("\"/grammar\"");
 
         return grammarService.findAll();
     }
@@ -42,7 +43,7 @@ public class GrammarController {
         return grammarService.findAllByLevel(lvl);
     }
 
-    @PostMapping("/save")
+    @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public Grammar saveGrammar(@RequestBody Grammar grammar) {
         logger.info("\"/grammar/saveGrammar\"");
 
@@ -89,7 +90,7 @@ public class GrammarController {
         return grammarService.findByDifferentParameters(param);
     }
 
-    @PostMapping("/addGrammarInPersonal")
+    @PostMapping(value = "/addGrammarInPersonal", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public List<Grammar> addGrammarInPersonal(@RequestParam("grammarId") int grammarId,
                                         @RequestParam(value = "lvl", required = false) Integer lvl,
                                         @RequestParam("userId") int userId) {
@@ -131,14 +132,3 @@ public class GrammarController {
         return grammarService.findAll();
     }
 }
-
-/*
-Вывести всю грамматику +
-Вывести грамматику определенного уровня +
-Сохранить новую грамматику +
-Изменить грамматику +
-Удалить грамматику +
-Найти грамматику по указанному параметру +
-Добавить представленную в общем списке грамматику в персональный лист +
-Удалить представленную в общем списке грамматику из персонального листа +
- */

@@ -1,29 +1,41 @@
 package jr_course.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
 @Table(name="grammar")
+@XmlRootElement(name = "user")
+@XmlType(propOrder = {"id", "level", "formula", "example", "description", "exerciseCollection"})
+@JsonPropertyOrder({"id", "level", "formula", "example", "description", "exerciseCollection"})
 public class Grammar implements Serializable {
+
+    @XmlAttribute
+    @XmlID
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
     private int id;
 
+    @XmlElement
     @Column(name="level")
     private int level;
 
+    @XmlElement
     @Column(name="formula")
     private String formula;
 
+    @XmlElement
     @Column(name="example")
     private String example;
 
+    @XmlElement
     @Column(name="description")
     private String description;
 
@@ -35,8 +47,9 @@ public class Grammar implements Serializable {
     @JsonIgnore
     private Collection<User> userCollection;
 
+    @XmlElementWrapper()
+    @XmlElement(name = "grammar")
     @OneToMany(mappedBy = "grammar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
     private Collection<Exercise> exerciseCollection;
 
     public Grammar() {}

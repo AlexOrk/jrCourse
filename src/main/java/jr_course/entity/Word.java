@@ -1,33 +1,47 @@
 package jr_course.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name="word")
+@XmlRootElement(name = "word")
+@XmlType(propOrder = {"id", "level", "jpKanji", "jpKana", "ruWord", "description"})
+@JsonPropertyOrder({"id", "level", "jpKanji", "jpKana", "ruWord", "description"})
 public class Word implements Serializable {
 
+	@XmlAttribute
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
 
+	@XmlElement
 	@Column(name="level")
 	private String level;
 
+	@XmlElement
 	@Column(name="jp_kanji")
 	private String jpKanji;
 
+	@XmlElement
 	@Column(name="jp_kana")
 	private String jpKana;
 
+	@XmlElement
 	@Column(name="ru_word")
 	private String ruWord;
 
+	@XmlElement
 	@Column(name="description")
 	private String description;
 
@@ -38,7 +52,6 @@ public class Word implements Serializable {
 			inverseJoinColumns = @JoinColumn(name = "user_id"))
 	@JsonIgnore
 	private List<User> userCollection;
-
 
 	public Word() {}
 

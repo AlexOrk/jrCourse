@@ -7,6 +7,7 @@ import jr_course.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.io.StringReader;
 import java.util.List;
 
 @RestController
-@RequestMapping("/notes")
+@RequestMapping(value = "/notes", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class NoteController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
@@ -27,14 +28,14 @@ public class NoteController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public List<Note> showNotes(@RequestParam("userId") int userId) {
         logger.info("\"/notes/?userId=" + userId + "\"");
 
         return noteService.findAllByUserId(userId);
     }
 
-    @PostMapping("/save")
+    @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public Note saveNote(@RequestBody Note note, @RequestParam("userId") int userId) {
         logger.info("\"/notes/saveNote\"");
 
@@ -56,9 +57,3 @@ public class NoteController {
         return noteService.findAllByUserId(userId);
     }
 }
-/*
-Показать заметки +
-Создать заметку +
-Изменить заметку +
-Удалить заметку +
-*/

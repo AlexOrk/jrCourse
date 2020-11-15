@@ -8,6 +8,7 @@ import jr_course.service.GrammarService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.io.StringReader;
 import java.util.List;
 
 @RestController
-@RequestMapping("/exercises")
+@RequestMapping(value = "/exercises", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class ExerciseController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
@@ -28,14 +29,14 @@ public class ExerciseController {
         this.grammarService = grammarService;
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public List<Exercise> showExercises(@RequestParam("grammarId") int grammarId) {
-        logger.info("\"/exercises/?grammarId=" + grammarId + "\"");
+        logger.info("\"/exercises?grammarId=" + grammarId + "\"");
 
         return exerciseService.findAllByGrammar_Id(grammarId);
     }
 
-    @PostMapping("/save")
+    @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public Exercise saveExercise(@RequestBody Exercise exercise, @RequestParam("grammarId") int grammarId) {
         logger.info("\"/exercises/saveExercise\"");
 
@@ -57,9 +58,3 @@ public class ExerciseController {
         return exerciseService.findAllByGrammar_Id(grammarId);
     }
 }
-/*
-Показать заметки +
-Создать заметку +
-Изменить заметку +
-Удалить заметку +
-*/

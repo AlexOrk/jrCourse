@@ -5,12 +5,13 @@ import jr_course.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping(value = "/users", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class UserController {
     // Controller for admin section
 
@@ -23,9 +24,9 @@ public class UserController {
     }
 
     // show all users except admin
-    @GetMapping("/showUsers")
+    @GetMapping()
     public List<User> showUsers() {
-        logger.info("\"/users/showUsers\"");
+        logger.info("\"/users\"");
 
         return userService.findAllExceptAdmin();
     }
@@ -64,9 +65,3 @@ public class UserController {
         return userService.findUsersByParam(param);
     }
 }
-/*
-Вывести всех юзеров кроме админа +
-Удалить юзера по id +
-Удалить всех юзеров кроме админа +
-Найти юзера по id +
- */

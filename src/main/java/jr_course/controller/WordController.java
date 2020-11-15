@@ -8,6 +8,7 @@ import jr_course.service.WordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.io.StringReader;
 import java.util.List;
 
 @RestController
-@RequestMapping("/words")
+@RequestMapping(value = "/words", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class WordController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
@@ -28,9 +29,9 @@ public class WordController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public List<Word> showWords() {
-        logger.info("\"/words/\"");
+        logger.info("\"/words\"");
 
         return wordService.findAll();
     }
@@ -42,7 +43,7 @@ public class WordController {
         return wordService.findAllByLevel(lvl);
     }
 
-    @PostMapping("/save")
+    @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public Word saveWord(@RequestBody Word word) {
         logger.info("\"/words/saveWord\"");
 
@@ -88,7 +89,8 @@ public class WordController {
         return wordService.findByDifferentParameters(param);
     }
 
-    @PostMapping("/addWordInPersonal")
+    @PostMapping(value = "/addWordInPersonal",
+                consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public List<Word> addWordInPersonal(@RequestParam("wordId") int wordId,
                                     @RequestParam(value = "lvl", required = false) String lvl,
                                     @RequestParam("userId") int userId) {
@@ -130,14 +132,3 @@ public class WordController {
         return wordService.findAll();
     }
 }
-
-/*
-Вывести все слова +
-Вывести слова определенного уровня +
-Сохранить новое слово +
-Изменить слово +
-Удалить слово +
-Найти слова по указанному параметру +
-Добавить представленное в общем списке слово в персональный словарь +
-Удалить представленное в общем списке слово из персонального словаря +
- */

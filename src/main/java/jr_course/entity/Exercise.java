@@ -1,28 +1,41 @@
 package jr_course.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import javax.persistence.*;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name="exercise")
+@XmlRootElement(name = "exercise")
+@XmlType(propOrder = {"id", "description", "task", "answer"})
+@JsonPropertyOrder({"id", "description", "task", "answer"})
 public class Exercise implements Serializable {
 
+	@XmlAttribute
+	@XmlID
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
 
+	@XmlElement
 	@Column(name="description")
 	private String description;
 
+	@XmlElement
 	@Column(name="task")
 	private String task;
 
+	@XmlElement
 	@Column(name="answer")
 	private String answer;
 
 	@ManyToOne
 	@JoinColumn(name = "grammar_id", nullable = false)
+	@JsonIgnore
 	private Grammar grammar;
 
 	public Exercise() {}

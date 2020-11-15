@@ -1,33 +1,45 @@
 package jr_course.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
 @Table(name="user")
+@XmlRootElement(name = "user")
+@XmlType(propOrder = {"id", "username", "firstname", "lastname", "mail", "admin", "noteCollection"})
+@JsonPropertyOrder({"id", "username", "firstname", "lastname", "mail", "admin", "noteCollection"})
 public class User implements Serializable {
 
+    @XmlAttribute
+    @XmlID
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
     private int id;
 
+    @XmlElement
     @Column(name="username")
     private String username;
 
+    @XmlElement
     @Column(name="first_name")
     private String firstname;
 
+    @XmlElement
     @Column(name="last_name")
     private String lastname;
 
+    @XmlElement
     @Column(name="mail")
     private String mail;
 
+    @XmlElement
     @Column(name="is_admin")
     private boolean admin;
 
@@ -47,6 +59,8 @@ public class User implements Serializable {
     @JsonIgnore
     private Collection<Grammar> grammarCollection;
 
+    @XmlElementWrapper(name = "noteCollection")
+    @XmlElement(name = "note")
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<Note> noteCollection;
 
@@ -118,7 +132,7 @@ public class User implements Serializable {
         this.mail = mail;
     }
 
-    public boolean admin() {
+    public boolean getAdmin() {
         return admin;
     }
 
