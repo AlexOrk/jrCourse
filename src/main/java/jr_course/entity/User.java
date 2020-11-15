@@ -48,7 +48,6 @@ public class User implements Serializable {
     private Collection<Grammar> grammarCollection;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
     private Collection<Note> noteCollection;
 
     public User() {}
