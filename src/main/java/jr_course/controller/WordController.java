@@ -43,22 +43,21 @@ public class WordController {
     }
 
     @PostMapping("/save")
-    public Word saveWord(@RequestBody String body) {
+    public Word saveWord(@RequestBody Word word) {
         logger.info("\"/words/saveWord\"");
 
-        ObjectMapper mapper = new ObjectMapper();
-        StringReader reader = new StringReader(body);
-
-        Word word = null;
-        try {
-            word = mapper.readValue(reader, Word.class);
-            logger.info("Word was read.");
-        } catch (IOException e) {
-            logger.debug(e.getMessage());
-            e.printStackTrace();
-        } finally {
-            reader.close();
-        }
+        // no need yet
+//        ObjectMapper mapper = new ObjectMapper();
+//        StringReader reader = new StringReader(body);
+//
+//        Word word = null;
+//        try {
+//            word = mapper.readValue(reader, Word.class);
+//            logger.info("Word was read.");
+//        } catch (IOException e) {
+//            logger.debug(e.getMessage());
+//            e.printStackTrace();
+//        }
         wordService.save(word);
         logger.info("Word was saved!");
         return word;

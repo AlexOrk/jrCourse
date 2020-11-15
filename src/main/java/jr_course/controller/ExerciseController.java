@@ -36,20 +36,8 @@ public class ExerciseController {
     }
 
     @PostMapping("/save")
-    public Exercise saveExercise(@RequestBody String body, @RequestParam("grammarId") int grammarId) {
+    public Exercise saveExercise(@RequestBody Exercise exercise, @RequestParam("grammarId") int grammarId) {
         logger.info("\"/exercises/saveExercise\"");
-
-        ObjectMapper mapper = new ObjectMapper();
-        StringReader reader = new StringReader(body);
-
-        Exercise exercise = null;
-        try {
-            exercise = mapper.readValue(reader, Exercise.class);
-            logger.info("Exercise was read.");
-        } catch (IOException e) {
-            logger.debug(e.getMessage());
-            e.printStackTrace();
-        }
 
         Grammar grammar = grammarService.findById(grammarId);
         exercise.setGrammar(grammar);

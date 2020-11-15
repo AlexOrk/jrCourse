@@ -35,20 +35,8 @@ public class NoteController {
     }
 
     @PostMapping("/save")
-    public Note saveNote(@RequestBody String body, @RequestParam("userId") int userId) {
+    public Note saveNote(@RequestBody Note note, @RequestParam("userId") int userId) {
         logger.info("\"/notes/saveNote\"");
-
-        ObjectMapper mapper = new ObjectMapper();
-        StringReader reader = new StringReader(body);
-
-        Note note = null;
-        try {
-            note = mapper.readValue(reader, Note.class);
-            logger.info("Note was read.");
-        } catch (IOException e) {
-            logger.debug(e.getMessage());
-            e.printStackTrace();
-        }
 
         User user = userService.findById(userId);
         note.setUser(user);

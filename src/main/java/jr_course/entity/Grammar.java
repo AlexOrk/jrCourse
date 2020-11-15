@@ -37,7 +37,7 @@ public class Grammar implements Serializable {
 
     @OneToMany(mappedBy = "grammar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    Collection<Exercise> exerciseCollection;
+    private Collection<Exercise> exerciseCollection;
 
     public Grammar() {}
 
