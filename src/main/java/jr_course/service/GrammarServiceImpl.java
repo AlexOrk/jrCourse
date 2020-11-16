@@ -71,16 +71,16 @@ public class GrammarServiceImpl implements GrammarService {
     }
 
     @Override
-    public List<Grammar> findAllByUserCollectionId(int userId) {
+    public List<Grammar> findAllByUserId(int userId) {
         logger.info("\"findAllByUserCollection_Id(userId)\"");
         logger.info("Find all grammar by user id " + userId + ".");
         return grammarRepository.findAllByUserCollection_Id(userId);
     }
 
     @Override
-    public void addGrammarInPersonalList(User user, int grammarId) {
-        logger.info("\"addGrammarInPersonalGrammarList(user, grammarId)\"");
-        logger.info("Add grammar in personal grammar list.");
+    public void addGrammarToPersonalList(User user, int grammarId) {
+        logger.info("\"addGrammarToPersonalList(user, grammarId)\"");
+        logger.info("Add grammar to personal grammar list.");
 
         Grammar grammar = findById(grammarId);
 
@@ -89,7 +89,7 @@ public class GrammarServiceImpl implements GrammarService {
 
         logger.info("Update word.");
         grammarRepository.save(grammar);
-        logger.info("Grammar was added in personal grammar list.");
+        logger.info("Grammar was added to personal grammar list.");
     }
 
     @Override

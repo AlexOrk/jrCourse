@@ -2,34 +2,35 @@ package jr_course.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name="exercise")
-@XmlRootElement(name = "exercise")
-@XmlType(propOrder = {"id", "description", "task", "answer"})
+@JacksonXmlRootElement(localName = "exercise")
 @JsonPropertyOrder({"id", "description", "task", "answer"})
+@ApiModel(description = "Details about the exercise for learning grammar")
 public class Exercise implements Serializable {
 
-	@XmlAttribute
-	@XmlID
+	@ApiModelProperty(notes = "The unique id of the exercise")
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
 
-	@XmlElement
+	@ApiModelProperty(notes = "The exercise's description")
 	@Column(name="description")
 	private String description;
 
-	@XmlElement
+	@ApiModelProperty(notes = "The exercise's task")
 	@Column(name="task")
 	private String task;
 
-	@XmlElement
+	@ApiModelProperty(notes = "The exercise's answer")
 	@Column(name="answer")
 	private String answer;
 

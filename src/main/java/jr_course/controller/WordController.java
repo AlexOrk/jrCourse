@@ -1,6 +1,8 @@
 package jr_course.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import jr_course.entity.User;
 import jr_course.entity.Word;
 import jr_course.service.UserService;
@@ -30,6 +32,7 @@ public class WordController {
     }
 
     @GetMapping()
+    @ApiOperation(value = "Show all words", notes = "Find and return all words", response = List.class)
     public List<Word> showWords() {
         logger.info("\"/words\"");
 
@@ -37,6 +40,8 @@ public class WordController {
     }
 
     @GetMapping("/lvl/{lvl}")
+    @ApiOperation(value = "Show all words by level",
+            notes = "Find and return all words by level", response = List.class)
     public List<Word> showWordsByLevel(@PathVariable String lvl) {
         logger.info("\"/words/lvl/" + lvl + "\"");
 
@@ -44,6 +49,7 @@ public class WordController {
     }
 
     @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @ApiOperation(value = "Save word", notes = "Save word to the word list", response = Word.class)
     public Word saveWord(@RequestBody Word word) {
         logger.info("\"/words/saveWord\"");
 
@@ -65,7 +71,9 @@ public class WordController {
     }
 
     @DeleteMapping("/delete")
-    public List<Word> deleteWord(@RequestParam("wordId") int wordId) {
+    @ApiOperation(value = "Delete word", notes = "Delete word by id and return all words", response = List.class)
+    public List<Word> deleteWord(@ApiParam(value = "Id value for word you need to delete", required = true)
+                                 @RequestParam("wordId") int wordId) {
         logger.info("\"/words/deleteWord?wordId=" + wordId + "\"");
 
         wordService.deleteById(wordId);
@@ -76,7 +84,11 @@ public class WordController {
     }
 
     @GetMapping("/search")
-    public List<Word> searchWord(@RequestParam(value = "param", required = false) String param,
+    @ApiOperation(value = "Search word by param",
+            notes = "If param exists, find and return words by param, otherwise return all", response = List.class)
+    public List<Word> searchWord(@ApiParam(value = "Param value for word you need to find", required = true)
+                                 @RequestParam(value = "param", required = false) String param,
+                                 @ApiParam(value = "Id value for user whose word you need to find", required = true)
                                  @RequestParam("userId") int userId) {
         logger.info("\"/words/search?param=" + param + "&userId=" + userId + "\"");
 
@@ -89,17 +101,22 @@ public class WordController {
         return wordService.findByDifferentParameters(param);
     }
 
-    @PostMapping(value = "/addWordInPersonal",
+    @PostMapping(value = "/addWordToPersonal",
                 consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public List<Word> addWordInPersonal(@RequestParam("wordId") int wordId,
-                                    @RequestParam(value = "lvl", required = false) String lvl,
-                                    @RequestParam("userId") int userId) {
-        logger.info("\"/words/addWordInPersonal?wordId=" + wordId + "&lvl=" + lvl + "&userId=" + userId + "\"");
-        logger.info("Add a word in personal vocabulary.");
+    @ApiOperation(value = "Add word to personal vocabulary",
+            notes = "Add word by word id to user's personal vocabulary and return all words", response = List.class)
+    public List<Word> addWordToPersonal(@ApiParam(value = "Id value for word you need to add", required = true)
+                                        @RequestParam("wordId") int wordId,
+                                        @ApiParam(value = "Level value to return word", required = false)
+                                        @RequestParam(value = "lvl", required = false) String lvl,
+                                        @ApiParam(value = "Id value for user to add word", required = true)
+                                        @RequestParam("userId") int userId) {
+        logger.info("\"/words/addWordToPersonal?wordId=" + wordId + "&lvl=" + lvl + "&userId=" + userId + "\"");
+        logger.info("Add a word to personal vocabulary.");
 
         User user = userService.findById(userId);
 
-        wordService.addWordInPersonalVocabulary(user, wordId);
+        wordService.addWordToPersonalVocabulary(user, wordId);
 
         if (lvl != null) {
             logger.info("Word was on the lvl page, redirect to the lvl page.");
@@ -111,9 +128,14 @@ public class WordController {
     }
 
     @DeleteMapping("/deleteWordFromPersonal")
-    public List<Word> deleteWordFromPersonal(@RequestParam("wordId") int wordId,
-                                         @RequestParam(value = "lvl", required = false) String lvl,
-                                         @RequestParam("userId") int userId) {
+    @ApiOperation(value = "Delete word from personal vocabulary",
+            notes = "Delete word by id from user's personal vocabulary and return all words", response = List.class)
+    public List<Word> deleteWordFromPersonal(@ApiParam(value = "Id value for word you need to delete", required = true)
+                                             @RequestParam("wordId") int wordId,
+                                             @ApiParam(value = "Level value to return word", required = false)
+                                             @RequestParam(value = "lvl", required = false) String lvl,
+                                             @ApiParam(value = "Id value for user to delete the word", required = true)
+                                             @RequestParam("userId") int userId) {
         logger.info("\"deleteWordFromPersonal?wordId=" + wordId + "&lvl=" + lvl + "&userId=" + userId + "\"");
         logger.info("Delete word from personal vocabulary.");
 

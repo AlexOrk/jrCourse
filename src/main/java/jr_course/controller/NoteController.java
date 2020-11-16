@@ -1,6 +1,9 @@
 package jr_course.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jr_course.entity.Grammar;
 import jr_course.entity.Note;
 import jr_course.entity.User;
 import jr_course.service.*;
@@ -29,15 +32,20 @@ public class NoteController {
     }
 
     @GetMapping()
-    public List<Note> showNotes(@RequestParam("userId") int userId) {
+    @ApiOperation(value = "Show all notes", notes = "Find all notes by user id", response = List.class)
+    public List<Note> showNotes(@ApiParam(value = "Id value for user whose notes you need to find", required = true)
+                                @RequestParam("userId") int userId) {
         logger.info("\"/notes/?userId=" + userId + "\"");
 
         return noteService.findAllByUserId(userId);
     }
 
     @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public Note saveNote(@RequestBody Note note, @RequestParam("userId") int userId) {
-        logger.info("\"/notes/saveNote\"");
+    @ApiOperation(value = "Save a note", notes = "Save user note", response = Note.class)
+    public Note saveNote(@RequestBody Note note,
+                         @ApiParam(value = "Id value for user whose note you need to save", required = true)
+                         @RequestParam("userId") int userId) {
+        logger.info("\"/notes/saveNote?userId=" + userId + "\"");
 
         User user = userService.findById(userId);
         note.setUser(user);
@@ -47,7 +55,11 @@ public class NoteController {
     }
 
     @DeleteMapping("/delete")
-    public List<Note> deleteNote(@RequestParam("noteId") int noteId, @RequestParam("userId") int userId) {
+    @ApiOperation(value = "Delete note",
+            notes = "Delete user note by id and return all user notes", response = List.class)
+    public List<Note> deleteNote(@RequestParam("noteId") int noteId,
+                                 @ApiParam(value = "Id value for user whose note you need to delete", required = true)
+                                 @RequestParam("userId") int userId) {
         logger.info("\"/notes/deleteNote?noteId=" + noteId + "&userId=" + userId + "\"");
 
         noteService.deleteById(noteId);

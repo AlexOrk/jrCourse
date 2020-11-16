@@ -2,40 +2,43 @@ package jr_course.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
 @Table(name="grammar")
-@XmlRootElement(name = "user")
-@XmlType(propOrder = {"id", "level", "formula", "example", "description", "exerciseCollection"})
+@JacksonXmlRootElement(localName = "grammar")
 @JsonPropertyOrder({"id", "level", "formula", "example", "description", "exerciseCollection"})
+@ApiModel(description = "Details about grammar for learning japanese")
 public class Grammar implements Serializable {
 
-    @XmlAttribute
-    @XmlID
+    @ApiModelProperty(notes = "The unique id of grammar")
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
     private int id;
 
-    @XmlElement
+    @ApiModelProperty(notes = "The grammar's level")
     @Column(name="level")
     private int level;
 
-    @XmlElement
+    @ApiModelProperty(notes = "The grammar's formula")
     @Column(name="formula")
     private String formula;
 
-    @XmlElement
+    @ApiModelProperty(notes = "The example of using grammar")
     @Column(name="example")
     private String example;
 
-    @XmlElement
+    @ApiModelProperty(notes = "The grammar's description")
     @Column(name="description")
     private String description;
 
@@ -47,8 +50,9 @@ public class Grammar implements Serializable {
     @JsonIgnore
     private Collection<User> userCollection;
 
-    @XmlElementWrapper()
-    @XmlElement(name = "grammar")
+    @ApiModelProperty(notes = "The collection of exercises for learning grammar")
+    @JacksonXmlElementWrapper(localName = "exerciseCollection")
+    @JacksonXmlProperty(localName = "exercise")
     @OneToMany(mappedBy = "grammar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<Exercise> exerciseCollection;
 

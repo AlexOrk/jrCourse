@@ -11,10 +11,10 @@ public interface WordService {
     public List<Word> findAll();
     public List<Word> findAllByLevel(String level);
     public Word findById(int id);
-    public List<Word> findAllByUserCollectionId(int userId);
+    public List<Word> findAllByUserId(int userId);
     public List<Word> findByDifferentParameters(String word);
 
-    public void addWordInPersonalVocabulary(User user, int wordId);
+    public void addWordToPersonalVocabulary(User user, int wordId);
 
     public void save(Word employee);
 

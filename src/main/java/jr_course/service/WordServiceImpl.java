@@ -72,15 +72,15 @@ public class WordServiceImpl implements WordService {
 	}
 
 	@Override
-	public List<Word> findAllByUserCollectionId(int userId) {
+	public List<Word> findAllByUserId(int userId) {
 		logger.info("\"findAllByUserCollection_Id(userId)\"");
 		logger.info("Find all words by user id " + userId + ".");
 		return wordRepository.findAllByUserCollection_Id(userId);
 	}
 
-	public void addWordInPersonalVocabulary(User user, int wordId) {
-		logger.info("\"addWordInPersonalVocabulary(user, wordId)\"");
-		logger.info("Add word in personal vocabulary");
+	public void addWordToPersonalVocabulary(User user, int wordId) {
+		logger.info("\"addWordToPersonalVocabulary(user, wordId)\"");
+		logger.info("Add word to personal vocabulary");
 
 		Word word = findById(wordId);
 
@@ -89,7 +89,7 @@ public class WordServiceImpl implements WordService {
 
 		logger.info("Update word.");
 		wordRepository.save(word);
-		logger.info("Word was added in personal vocabulary.");
+		logger.info("Word was added to personal vocabulary.");
 	}
 
 	@Override

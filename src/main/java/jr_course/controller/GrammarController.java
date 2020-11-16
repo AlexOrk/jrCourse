@@ -1,6 +1,8 @@
 package jr_course.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import jr_course.entity.Grammar;
 import jr_course.entity.User;
 import jr_course.service.GrammarService;
@@ -30,6 +32,7 @@ public class GrammarController {
     }
 
     @GetMapping()
+    @ApiOperation(value = "Show all grammar", notes = "Find and return all grammar", response = List.class)
     public List<Grammar> showGrammar() {
         logger.info("\"/grammar\"");
 
@@ -37,6 +40,8 @@ public class GrammarController {
     }
 
     @GetMapping("/lvl/{lvl}")
+    @ApiOperation(value = "Show all grammar by level",
+            notes = "Find and return all grammar by level", response = List.class)
     public List<Grammar> showGrammarByLevel(@PathVariable int lvl) {
         logger.info("\"/grammar/lvl/" + lvl + "\"");
 
@@ -44,6 +49,7 @@ public class GrammarController {
     }
 
     @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @ApiOperation(value = "Save grammar", notes = "Save grammar to the grammar list", response = Grammar.class)
     public Grammar saveGrammar(@RequestBody Grammar grammar) {
         logger.info("\"/grammar/saveGrammar\"");
 
@@ -66,7 +72,9 @@ public class GrammarController {
     }
 
     @DeleteMapping("/delete")
-    public List<Grammar> deleteGrammar(@RequestParam("grammarId") int grammarId) {
+    @ApiOperation(value = "Delete grammar", notes = "Delete grammar by id and return all grammar", response = List.class)
+    public List<Grammar> deleteGrammar(@ApiParam(value = "Id value for grammar you need to delete", required = true)
+                                       @RequestParam("grammarId") int grammarId) {
         logger.info("\"/grammar/deleteGrammar?grammarId" + grammarId + "\"");
 
         grammarService.deleteById(grammarId);
@@ -77,7 +85,11 @@ public class GrammarController {
     }
 
     @GetMapping("/search")
-    public List<Grammar> searchGrammar(@RequestParam(value = "param", required = false) String param,
+    @ApiOperation(value = "Search grammar by param",
+            notes = "If param exists, find and return grammar by param, otherwise return all", response = List.class)
+    public List<Grammar> searchGrammar(@ApiParam(value = "Param value for grammar you need to find", required = true)
+                                       @RequestParam(value = "param", required = false) String param,
+                                       @ApiParam(value = "Id value for user whose grammar you need to find", required = true)
                                        @RequestParam("userId") int userId) {
         logger.info("\"/grammar/search?param=" + param + "&userId=" + userId + "\"");
 
@@ -90,16 +102,22 @@ public class GrammarController {
         return grammarService.findByDifferentParameters(param);
     }
 
-    @PostMapping(value = "/addGrammarInPersonal", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public List<Grammar> addGrammarInPersonal(@RequestParam("grammarId") int grammarId,
-                                        @RequestParam(value = "lvl", required = false) Integer lvl,
-                                        @RequestParam("userId") int userId) {
-        logger.info("\"/grammar/addGrammarInPersonal?grammarId=" + grammarId + "&lvl=" + lvl + "&userId=" + userId + "\"");
-        logger.info("Add a grammar in personal grammar list.");
+    @PostMapping(value = "/addGrammarToPersonal",
+            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @ApiOperation(value = "Add grammar to personal list",
+            notes = "Add grammar by grammar id to user's personal list and return all grammar", response = List.class)
+    public List<Grammar> addGrammarToPersonal(@ApiParam(value = "Id value for grammar you need to add", required = true)
+                                              @RequestParam("grammarId") int grammarId,
+                                              @ApiParam(value = "Level value to return grammar", required = false)
+                                              @RequestParam(value = "lvl", required = false) Integer lvl,
+                                              @ApiParam(value = "Id value for user to add grammar", required = true)
+                                              @RequestParam("userId") int userId) {
+        logger.info("\"/grammar/addGrammarToPersonal?grammarId=" + grammarId + "&lvl=" + lvl + "&userId=" + userId + "\"");
+        logger.info("Add grammar to personal grammar list.");
 
         User user = userService.findById(userId);
 
-        grammarService.addGrammarInPersonalList(user, grammarId);
+        grammarService.addGrammarToPersonalList(user, grammarId);
 
         if (lvl != null) {
             logger.info("Grammar was on the lvl page, redirect to the lvl page.");
@@ -111,9 +129,14 @@ public class GrammarController {
     }
 
     @DeleteMapping("/deleteGrammarFromPersonal")
-    public List<Grammar> deleteGrammarFromPersonal(@RequestParam("grammarId") int grammarId,
-                                             @RequestParam(value = "lvl", required = false) Integer lvl,
-                                             @RequestParam("userId") int userId) {
+    @ApiOperation(value = "Delete grammar from personal list",
+            notes = "Delete grammar by id from user's personal list and return all grammar", response = List.class)
+    public List<Grammar> deleteGrammarFromPersonal(@ApiParam(value = "Id value for grammar you need to delete", required = true)
+                                                   @RequestParam("grammarId") int grammarId,
+                                                   @ApiParam(value = "Level value to return grammar", required = false)
+                                                   @RequestParam(value = "lvl", required = false) Integer lvl,
+                                                   @ApiParam(value = "Id value for user to delete grammar", required = true)
+                                                   @RequestParam("userId") int userId) {
         logger.info("\"deleteGrammarFromPersonal?grammarId=" + grammarId + "&lvl=" + lvl + "&userId=" + userId + "\"");
         logger.info("Delete word from personal grammar list.");
 

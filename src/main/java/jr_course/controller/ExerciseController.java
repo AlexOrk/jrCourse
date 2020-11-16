@@ -1,6 +1,8 @@
 package jr_course.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import jr_course.entity.Exercise;
 import jr_course.entity.Grammar;
 import jr_course.service.ExerciseService;
@@ -30,14 +32,19 @@ public class ExerciseController {
     }
 
     @GetMapping()
-    public List<Exercise> showExercises(@RequestParam("grammarId") int grammarId) {
+    @ApiOperation(value = "Show all exercises", notes = "Find all exercises by grammar id", response = List.class)
+    public List<Exercise> showExercises(@ApiParam(value = "Id value for grammar you need to retrieve", required = true)
+                                        @RequestParam("grammarId") int grammarId) {
         logger.info("\"/exercises?grammarId=" + grammarId + "\"");
 
         return exerciseService.findAllByGrammar_Id(grammarId);
     }
 
     @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public Exercise saveExercise(@RequestBody Exercise exercise, @RequestParam("grammarId") int grammarId) {
+    @ApiOperation(value = "Save exercise", notes = "Save exercise for grammar by grammar id", response = Exercise.class)
+    public Exercise saveExercise(@RequestBody Exercise exercise,
+                                 @ApiParam(value = "Id value for grammar you need to save", required = true)
+                                 @RequestParam("grammarId") int grammarId) {
         logger.info("\"/exercises/saveExercise\"");
 
         Grammar grammar = grammarService.findById(grammarId);
@@ -48,7 +55,12 @@ public class ExerciseController {
     }
 
     @DeleteMapping("/delete")
-    public List<Exercise> deleteExercise(@RequestParam("exerciseId") int exerciseId, @RequestParam("grammarId") int grammarId) {
+    @ApiOperation(value = "Delete exercise", notes = "Delete exercise by id, return all exercises", response = List.class)
+    public List<Exercise> deleteExercise(@ApiParam(value = "Id value for exercise you need to delete", required = true)
+                                         @RequestParam("exerciseId") int exerciseId,
+                                         @ApiParam(value = "Id value for grammar whose exercise you need to delete",
+                                                 required = true)
+                                         @RequestParam("grammarId") int grammarId) {
         logger.info("\"/exercises/deleteExercise?exerciseId=" + exerciseId + "&grammarId=" + grammarId + "\"");
 
         exerciseService.deleteById(exerciseId);

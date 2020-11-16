@@ -2,32 +2,31 @@ package jr_course.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
 @Entity
 @Table(name="note")
-@XmlRootElement(name = "note")
-@XmlType(propOrder = {"id", "name", "content"})
+@JacksonXmlRootElement(localName = "note")
 @JsonPropertyOrder({"id", "name", "content"})
+@ApiModel(description = "Details about user note")
 public class Note implements Serializable {
 
-	@XmlAttribute
+	@ApiModelProperty(notes = "The unique id of the note")
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
 
-	@XmlElement
+	@ApiModelProperty(notes = "The note's name")
 	@Column(name="name")
 	private String name;
 
-	@XmlElement
+	@ApiModelProperty(notes = "The note's content")
 	@Column(name="content")
 	private String content;
 

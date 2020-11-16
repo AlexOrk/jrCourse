@@ -10,10 +10,10 @@ public interface GrammarService {
     public List<Grammar> findAll();
     public List<Grammar> findAllByLevel(int level);
     public Grammar findById(int id);
-    public List<Grammar> findAllByUserCollectionId(int userId);
+    public List<Grammar> findAllByUserId(int userId);
     public List<Grammar> findByDifferentParameters(String param);
 
-    public void addGrammarInPersonalList(User user, int grammarId);
+    public void addGrammarToPersonalList(User user, int grammarId);
 
     public void save(Grammar grammar);
 

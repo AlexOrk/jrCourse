@@ -1,5 +1,7 @@
 package jr_course.controller;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import jr_course.entity.Grammar;
 import jr_course.entity.User;
 import jr_course.entity.Word;
@@ -31,21 +33,31 @@ public class PersonalController {
     }
 
     @GetMapping("/words")
-    public List<Word> showWords(@RequestParam("userId") int userId) {
+    @ApiOperation(value = "Show all words", notes = "Find and return all words in the user's vocabulary by user id",
+            response = List.class)
+    public List<Word> showWords(@ApiParam(value = "Id value for user whose words you need to find", required = true)
+                                @RequestParam("userId") int userId) {
         logger.info("\"/personal/words?userId=" + userId + "\"");
 
-        return wordService.findAllByUserCollectionId(userId);
+        return wordService.findAllByUserId(userId);
     }
 
     @GetMapping("/grammar")
-    public List<Grammar> showGrammar(@RequestParam("userId") int userId) {
+    @ApiOperation(value = "Show all grammar", notes = "Find and return all grammar in the user's list by user id",
+            response = List.class)
+    public List<Grammar> showGrammar(@ApiParam(value = "Id value for user whose grammar you need to find", required = true)
+                                     @RequestParam("userId") int userId) {
         logger.info("\"/personal/grammar?userId=" + userId + "\"");
 
-        return grammarService.findAllByUserCollectionId(userId);
+        return grammarService.findAllByUserId(userId);
     }
 
     @DeleteMapping("/delete/word")
-    public List<Word> deleteWord(@RequestParam("wordId") int wordId,
+    @ApiOperation(value = "Delete word",
+            notes = "Delete word by id from user's personal vocabulary and return all words", response = List.class)
+    public List<Word> deleteWord(@ApiParam(value = "Id value for word you need to delete", required = true)
+                                 @RequestParam("wordId") int wordId,
+                                 @ApiParam(value = "Id value for user to delete the word", required = true)
                                  @RequestParam("userId") int userId) {
         logger.info("\"deleteWordFromPersonal?wordId=" + wordId + "&userId=" + userId + "\"");
         logger.info("Delete word from personal vocabulary.");
@@ -56,11 +68,15 @@ public class PersonalController {
         wordService.deleteWordFromPersonalVocabulary(wordId, user);
 
         logger.info("Return all words by user id.");
-        return wordService.findAllByUserCollectionId(userId);
+        return wordService.findAllByUserId(userId);
     }
 
     @DeleteMapping("/delete/grammar")
-    public List<Word> deleteGrammar(@RequestParam("grammarId") int grammarId,
+    @ApiOperation(value = "Delete grammar",
+            notes = "Delete grammar by id from user's personal list and return all grammar", response = List.class)
+    public List<Word> deleteGrammar(@ApiParam(value = "Id value for grammar you need to delete", required = true)
+                                    @RequestParam("grammarId") int grammarId,
+                                    @ApiParam(value = "Id value for user to delete grammar", required = true)
                                     @RequestParam("userId") int userId) {
         logger.info("\"deleteGrammarFromPersonal?grammarId=" + grammarId + "&userId=" + userId + "\"");
         logger.info("Delete grammar from personal grammar list.");
@@ -71,6 +87,6 @@ public class PersonalController {
         grammarService.deleteGrammarFromPersonalList(grammarId, user);
 
         logger.info("Return all grammar by user id.");
-        return wordService.findAllByUserCollectionId(userId);
+        return wordService.findAllByUserId(userId);
     }
 }

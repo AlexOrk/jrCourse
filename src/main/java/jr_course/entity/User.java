@@ -2,44 +2,47 @@ package jr_course.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
 @Table(name="user")
-@XmlRootElement(name = "user")
-@XmlType(propOrder = {"id", "username", "firstname", "lastname", "mail", "admin", "noteCollection"})
+@JacksonXmlRootElement(localName = "user")
 @JsonPropertyOrder({"id", "username", "firstname", "lastname", "mail", "admin", "noteCollection"})
+@ApiModel(description = "Details about the user")
 public class User implements Serializable {
 
-    @XmlAttribute
-    @XmlID
+    @ApiModelProperty(notes = "The unique id of the user")
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
     private int id;
 
-    @XmlElement
+    @ApiModelProperty(notes = "The username the user is using")
     @Column(name="username")
     private String username;
 
-    @XmlElement
+    @ApiModelProperty(notes = "The user's first name")
     @Column(name="first_name")
     private String firstname;
 
-    @XmlElement
+    @ApiModelProperty(notes = "The user's last name")
     @Column(name="last_name")
     private String lastname;
 
-    @XmlElement
+    @ApiModelProperty(notes = "The user's mail address")
     @Column(name="mail")
     private String mail;
 
-    @XmlElement
+    @ApiModelProperty(notes = "The user's admin status")
     @Column(name="is_admin")
     private boolean admin;
 
@@ -59,8 +62,9 @@ public class User implements Serializable {
     @JsonIgnore
     private Collection<Grammar> grammarCollection;
 
-    @XmlElementWrapper(name = "noteCollection")
-    @XmlElement(name = "note")
+    @ApiModelProperty(notes = "The collection of user notes")
+    @JacksonXmlElementWrapper(localName = "noteCollection")
+    @JacksonXmlProperty(localName = "note")
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<Note> noteCollection;
 
