@@ -5,13 +5,17 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jr_course.entity.User;
 import jr_course.entity.Word;
+import jr_course.exception.main.CustomDataException;
 import jr_course.service.UserService;
 import jr_course.service.WordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jr_course.exception.*;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -50,24 +54,10 @@ public class WordController {
 
     @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Save word", notes = "Save word to the word list", response = Word.class)
-    public Word saveWord(@RequestBody Word word) {
+    public Word saveWord(@RequestBody String newWord) {
         logger.info("\"/words/saveWord\"");
-
-        // no need yet
-//        ObjectMapper mapper = new ObjectMapper();
-//        StringReader reader = new StringReader(body);
-//
-//        Word word = null;
-//        try {
-//            word = mapper.readValue(reader, Word.class);
-//            logger.info("Word was read.");
-//        } catch (IOException e) {
-//            logger.debug(e.getMessage());
-//            e.printStackTrace();
-//        }
-        wordService.save(word);
-        logger.info("Word was saved!");
-        return word;
+        
+        return wordService.save(newWord);
     }
 
     @DeleteMapping("/delete")
@@ -152,5 +142,16 @@ public class WordController {
 
         logger.info("Return all words.");
         return wordService.findAll();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DataErrorResponse> handleException(CustomDataException exception) {
+
+        DataErrorResponse response = new DataErrorResponse();
+        response.setStatus(exception.getStatus().value());
+        response.setMessage(exception.getMessage());
+        response.setTimeStamp(System.currentTimeMillis());
+
+        return new ResponseEntity<DataErrorResponse>(response, exception.getStatus());
     }
 }

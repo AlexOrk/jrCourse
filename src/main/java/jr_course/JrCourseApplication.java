@@ -43,9 +43,10 @@ public class JrCourseApplication extends SpringBootServletInitializer {
 				"Sample API",
 				"1.0",
 				"Free to use",
-				new springfox.documentation.service.Contact("Orkhoyan Alexey", "http://myweb.com", "aorkhoyan@bk.ru"),
-				"Super license",
-				"http://myweb.com",
+				new springfox.documentation.service.Contact(
+						"Orkhoyan Alexey", "https://github.com/AlexOrk", "aorkhoyan@bk.ru"),
+				"Free license",
+				"",
 				Collections.emptyList()
 		);
 	}

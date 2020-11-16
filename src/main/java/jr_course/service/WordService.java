@@ -16,7 +16,7 @@ public interface WordService {
 
     public void addWordToPersonalVocabulary(User user, int wordId);
 
-    public void save(Word employee);
+    public Word save(String body);
 
     public void deleteById(int id);
     public void deleteWordFromPersonalVocabulary(int wordId, User user);

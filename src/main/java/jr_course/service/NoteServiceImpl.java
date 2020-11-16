@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import jr_course.exception.*;
 
 import java.util.List;
 
@@ -37,6 +38,9 @@ public class NoteServiceImpl implements NoteService {
     public void deleteById(int id) {
         logger.info("\"deleteById(id)\"");
         logger.info("Delete a note by id " + id + ".");
-        noteRepository.deleteById(id);
+        if (noteRepository.existsById(id)) {
+            noteRepository.deleteById(id);
+            logger.info("Note was deleted!");
+        } else throw new DataNotFoundException("Note with id " + id + " was not found.");
     }
 }

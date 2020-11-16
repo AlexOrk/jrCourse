@@ -9,6 +9,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,18 +31,24 @@ public class Grammar implements Serializable {
 
     @ApiModelProperty(notes = "The grammar's level")
     @Column(name="level")
-    private int level;
+    @NotNull
+    @Min(value = 1, message = "must be greater than or equal to one")
+    @Max(value = 5, message = "must be less than or equal to five")
+    private Integer level;
 
     @ApiModelProperty(notes = "The grammar's formula")
     @Column(name="formula")
+    @NotNull
     private String formula;
 
     @ApiModelProperty(notes = "The example of using grammar")
     @Column(name="example")
+    @NotNull
     private String example;
 
     @ApiModelProperty(notes = "The grammar's description")
     @Column(name="description")
+    @NotNull
     private String description;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,

@@ -21,18 +21,19 @@
 		<wlpServerName>LibertyServer</wlpServerName>
 		<testServerHttpPort>9080</testServerHttpPort>
 		<testServerHttpsPort>9443</testServerHttpsPort>
+		<spring-framework.version>5.2.11.RELEASE</spring-framework.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-				<exclusions>
-					<exclusion>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-starter-tomcat</artifactId>
-					</exclusion>
-				</exclusions>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -86,25 +87,17 @@
 			<scope>runtime</scope>
 		</dependency>
 
-<!--		&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.woodstox/woodstox-core &ndash;&gt;-->
-<!--		<dependency>-->
-<!--			<groupId>com.fasterxml.woodstox</groupId>-->
-<!--			<artifactId>woodstox-core</artifactId>-->
-<!--			<version>6.2.1</version>-->
-<!--		</dependency>-->
-
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
 			<version>2.11.1</version>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>org.codehaus.woodstox</groupId>-->
-<!--			<artifactId>woodstox-core-asl</artifactId>-->
-<!--			<version>4.4.1</version>-->
-<!--		</dependency>-->
-
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20200518</version>
+		</dependency>
 
 	</dependencies>
 

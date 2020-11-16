@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import jr_course.exception.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,10 +34,12 @@ public class GrammarServiceImpl implements GrammarService {
     public List<Grammar> findAllByLevel(int level) {
         logger.info("\"findAllByLevelContains(level)\"");
         logger.info("Find all words in DB depending on the \"" + level + "\" level.");
+        if (!(level >= 1 && level <= 5))
+            throw new IncorrectDataInputException("Incorrect level data input - " + level);
+
         return grammarRepository.findAllByLevel(level);
     }
 
-    // getOne?
     @Override
     public Grammar findById(int id) {
         logger.info("\"findById(id)\"");
@@ -48,8 +51,8 @@ public class GrammarServiceImpl implements GrammarService {
         if (result.isPresent()) {
             grammar = result.get();
         } else {
-            logger.warn("Grammar not found.");
-            throw new RuntimeException("Грамматика с id - " + id + " не была найдена.");
+            logger.warn("Grammar was not found.");
+            throw new DataNotFoundException("Grammar with id " + id + " was not found.");
         }
 
         logger.info("Return grammar.");
@@ -66,8 +69,9 @@ public class GrammarServiceImpl implements GrammarService {
     @Override
     public void deleteById(int id) {
         logger.info("\"deleteById(id)\"");
-        logger.info("Delete a grammar in DB by id " + id + ".");
-        grammarRepository.deleteById(id);
+        logger.info("Delete a grammar by id " + id + ".");
+        if (grammarRepository.existsById(id)) grammarRepository.deleteById(id);
+        else throw new DataNotFoundException("Grammar with id \" + id + \" was not found.");
     }
 
     @Override
@@ -84,12 +88,16 @@ public class GrammarServiceImpl implements GrammarService {
 
         Grammar grammar = findById(grammarId);
 
-        logger.info("Add grammar.");
-        grammar.addUser(user);
+        if (grammar.getUserCollection().contains(user)) {
+            logger.info("Grammar was already added!");
+        } else {
+            logger.info("Add grammar.");
+            grammar.addUser(user);
 
-        logger.info("Update word.");
-        grammarRepository.save(grammar);
-        logger.info("Grammar was added to personal grammar list.");
+            logger.info("Update word.");
+            grammarRepository.save(grammar);
+            logger.info("Grammar was added to personal grammar list.");
+        }
     }
 
     @Override
@@ -99,11 +107,14 @@ public class GrammarServiceImpl implements GrammarService {
 
         logger.info("Find grammar by id and delete user.");
         Grammar grammar = findById(grammarId);
-        grammar.deleteUser(user);
 
-        logger.info("Update grammar.");
-        grammarRepository.save(grammar);
-        logger.info("Grammar was deleted from personal grammar list!");
+        if (grammar.getUserCollection().contains(user)) {
+            grammar.deleteUser(user);
+
+            logger.info("Update grammar.");
+            grammarRepository.save(grammar);
+            logger.info("Grammar was deleted from personal grammar list!");
+        } else logger.info("Grammar with id + " + grammarId + " was not found in the personal list." );
     }
 
     @Override

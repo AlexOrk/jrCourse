@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ExerciseService {
 
-    public List<Exercise> findAllByGrammar_Id(int id);
+    public List<Exercise> findAllByGrammarId(int grammarId);
 
     public void save(Exercise exercise);
 

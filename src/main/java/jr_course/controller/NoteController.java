@@ -6,12 +6,15 @@ import io.swagger.annotations.ApiParam;
 import jr_course.entity.Grammar;
 import jr_course.entity.Note;
 import jr_course.entity.User;
+import jr_course.exception.main.CustomDataException;
 import jr_course.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jr_course.exception.*;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -64,8 +67,18 @@ public class NoteController {
 
         noteService.deleteById(noteId);
 
-        logger.info("Note was deleted!");
         logger.info("Return all notes.");
         return noteService.findAllByUserId(userId);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DataErrorResponse> handleException(CustomDataException exception) {
+
+        DataErrorResponse response = new DataErrorResponse();
+        response.setStatus(exception.getStatus().value());
+        response.setMessage(exception.getMessage());
+        response.setTimeStamp(System.currentTimeMillis());
+
+        return new ResponseEntity<DataErrorResponse>(response, exception.getStatus());
     }
 }

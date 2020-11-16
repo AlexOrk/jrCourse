@@ -1,6 +1,5 @@
 package jr_course.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jr_course.entity.Grammar;
@@ -11,10 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jr_course.exception.*;
+import jr_course.exception.main.*;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.List;
 
 @RestController
@@ -42,7 +42,7 @@ public class GrammarController {
     @GetMapping("/lvl/{lvl}")
     @ApiOperation(value = "Show all grammar by level",
             notes = "Find and return all grammar by level", response = List.class)
-    public List<Grammar> showGrammarByLevel(@PathVariable int lvl) {
+    public List<Grammar> showGrammarByLevel(@PathVariable Integer lvl) {
         logger.info("\"/grammar/lvl/" + lvl + "\"");
 
         return grammarService.findAllByLevel(lvl);
@@ -102,8 +102,7 @@ public class GrammarController {
         return grammarService.findByDifferentParameters(param);
     }
 
-    @PostMapping(value = "/addGrammarToPersonal",
-            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/addGrammarToPersonal")
     @ApiOperation(value = "Add grammar to personal list",
             notes = "Add grammar by grammar id to user's personal list and return all grammar", response = List.class)
     public List<Grammar> addGrammarToPersonal(@ApiParam(value = "Id value for grammar you need to add", required = true)
@@ -153,5 +152,16 @@ public class GrammarController {
 
         logger.info("Return all grammar.");
         return grammarService.findAll();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DataErrorResponse> handleException(CustomDataException exception) {
+
+        DataErrorResponse response = new DataErrorResponse();
+        response.setStatus(exception.getStatus().value());
+        response.setMessage(exception.getMessage());
+        response.setTimeStamp(System.currentTimeMillis());
+
+        return new ResponseEntity<DataErrorResponse>(response, exception.getStatus());
     }
 }

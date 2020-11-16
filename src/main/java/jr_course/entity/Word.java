@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class Word implements Serializable {
 	@Column(name="jp_kana")
 	private String jpKana;
 
+	@NotNull
 	@ApiModelProperty(notes = "The word written in Russian")
 	@Column(name="ru_word")
 	private String ruWord;

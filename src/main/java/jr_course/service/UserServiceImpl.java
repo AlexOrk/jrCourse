@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import jr_course.exception.*;
 
 import java.util.List;
 
@@ -50,15 +51,21 @@ public class UserServiceImpl implements UserService {
     public User findById(int id) {
         logger.info("\"findById(id)\"");
         logger.info("Find user by id " + id + ".");
-        return userRepository.findById(id);
+        User user = null;
+
+        if ((user = userRepository.findById(id)) == null)
+            throw new DataNotFoundException("User with id " + id + " was not found.");
+        return user;
     }
 
     @Override
     public void deleteById(int id) {
         logger.info("\"deleteById(id)\"");
         logger.info("Delete user by id " + id + ".");
-        userRepository.deleteById(id);
-        logger.info("User was deleted!");
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            logger.info("User was deleted!");
+        } else throw new DataNotFoundException("User with id " + id + " was not found.");
     }
 
     @Transactional
