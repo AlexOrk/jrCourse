@@ -1,6 +1,7 @@
 package jr_course.service;
 
 import jr_course.dao.NoteRepository;
+import jr_course.dao.UserRepository;
 import jr_course.entity.Note;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,16 +15,20 @@ import java.util.List;
 public class NoteServiceImpl implements NoteService {
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
     private NoteRepository noteRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public NoteServiceImpl(NoteRepository noteRepository) {
+    public NoteServiceImpl(NoteRepository noteRepository, UserRepository userRepositor) {
         this.noteRepository = noteRepository;
+        this.userRepository = userRepositor;
     }
 
     @Override
     public List<Note> findAllByUserId(int id) {
         logger.info("\"findAllByUserId(id)\"");
         logger.info("Find all words by user id " + id + ".");
+        if (!userRepository.existsById(id))
+            throw new DataNotFoundException("User with id " + id + " was not found.");
         return noteRepository.findAllByUser_Id(id);
     }
 
