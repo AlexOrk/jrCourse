@@ -1,79 +1,71 @@
 package jr_course.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jr_course.entity.User;
 import jr_course.entity.Word;
+import jr_course.exception.main.CustomDataException;
+import jr_course.service.UserService;
 import jr_course.service.WordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jr_course.exception.*;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/words")
+@RequestMapping(value = "/words", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class WordController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
-
     private WordService wordService;
+    private UserService userService;
 
     @Autowired
-    public WordController(WordService wordService) {
+    public WordController(WordService wordService, UserService userService) {
         this.wordService = wordService;
+        this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping()
+    @ApiOperation(value = "Show all words", notes = "Find and return all words", response = List.class)
     public List<Word> showWords() {
-        logger.info("\"/words/\"");
+        logger.info("\"/words\"");
 
         return wordService.findAll();
     }
 
-    // we don't need check for null because we'll get var from path
     @GetMapping("/lvl/{lvl}")
+    @ApiOperation(value = "Show all words by level",
+            notes = "Find and return all words by level", response = List.class)
     public List<Word> showWordsByLevel(@PathVariable String lvl) {
         logger.info("\"/words/lvl/" + lvl + "\"");
 
-        return wordService.findByLevelContains(lvl);
+        return wordService.findAllByLevel(lvl);
     }
 
-    @GetMapping("/word")
-    public Word getWordById(@RequestParam("wordId") int wordId) {
-        logger.info("\"/words/getWord?wordId=" + wordId + "\"");
-
-        return wordService.findById(wordId);
-    }
-
-    // save, also update
-    @PostMapping("/save")
-    public Word saveWord(@RequestBody String body) {
+    @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @ApiOperation(value = "Save word", notes = "Save word to the word list", response = Word.class)
+    public Word saveWord(@RequestBody Word word) {
         logger.info("\"/words/saveWord\"");
 
-        ObjectMapper mapper = new ObjectMapper();
-        StringReader reader = new StringReader(body);
-
-        Word word = null;
-        try {
-            word = mapper.readValue(reader, Word.class);
-            logger.info("Word was read.");
-        } catch (IOException e) {
-            logger.debug(e.getMessage());
-            e.printStackTrace();
-        } finally {
-            reader.close();
-        }
         wordService.save(word);
         logger.info("Word was saved!");
         return word;
     }
 
-    // we don't need check for null because we'll get param by button
     @DeleteMapping("/delete")
-    public List<Word> deleteWord(@RequestParam("wordId") int wordId) {
+    @ApiOperation(value = "Delete word", notes = "Delete word by id and return all words", response = List.class)
+    public List<Word> deleteWord(@ApiParam(value = "Id value for word you need to delete", required = true)
+                                 @RequestParam("wordId") int wordId) {
         logger.info("\"/words/deleteWord?wordId=" + wordId + "\"");
 
         wordService.deleteById(wordId);
@@ -82,14 +74,86 @@ public class WordController {
         logger.info("Return all words.");
         return wordService.findAll();
     }
-}
 
-// searchWord
-/*
-Вывести все слова +
-Вывести слова определенного уровня +
-Вывести слово по id +
-Сохранить новое слово +
-Изменить слово +
-Удалить слово +
- */
+    @GetMapping("/search")
+    @ApiOperation(value = "Search word by param",
+            notes = "If param exists, find and return words by param, otherwise return all", response = List.class)
+    public List<Word> searchWord(@ApiParam(value = "Param value for word you need to find", required = true)
+                                 @RequestParam(value = "param", required = false) String param,
+                                 @ApiParam(value = "Id value for user whose word you need to find", required = true)
+                                 @RequestParam("userId") int userId) {
+        logger.info("\"/words/search?param=" + param + "&userId=" + userId + "\"");
+
+        if (param == null || param.trim().isEmpty()) {
+            logger.info("Return all words.");
+            return wordService.findAll();
+        }
+
+        logger.info("Return words with an input parameter.");
+        return wordService.findByDifferentParameters(param);
+    }
+
+    @PostMapping(value = "/addWordToPersonal",
+                consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @ApiOperation(value = "Add word to personal vocabulary",
+            notes = "Add word by word id to user's personal vocabulary and return all words", response = List.class)
+    public List<Word> addWordToPersonal(@ApiParam(value = "Id value for word you need to add", required = true)
+                                        @RequestParam("wordId") int wordId,
+                                        @ApiParam(value = "Level value to return word", required = false)
+                                        @RequestParam(value = "lvl", required = false) String lvl,
+                                        @ApiParam(value = "Id value for user to add word", required = true)
+                                        @RequestParam("userId") int userId) {
+        logger.info("\"/words/addWordToPersonal?wordId=" + wordId + "&lvl=" + lvl + "&userId=" + userId + "\"");
+        logger.info("Add a word to personal vocabulary.");
+
+        User user = userService.findById(userId);
+
+        wordService.addWordToPersonalVocabulary(user, wordId);
+
+        if (lvl != null) {
+            logger.info("Word was on the lvl page, redirect to the lvl page.");
+            return wordService.findAllByLevel(lvl);
+        }
+
+        logger.info("Return all words.");
+        return wordService.findAll();
+    }
+
+    @DeleteMapping("/deleteWordFromPersonal")
+    @ApiOperation(value = "Delete word from personal vocabulary",
+            notes = "Delete word by id from user's personal vocabulary and return all words", response = List.class)
+    public List<Word> deleteWordFromPersonal(@ApiParam(value = "Id value for word you need to delete", required = true)
+                                             @RequestParam("wordId") int wordId,
+                                             @ApiParam(value = "Level value to return word", required = false)
+                                             @RequestParam(value = "lvl", required = false) String lvl,
+                                             @ApiParam(value = "Id value for user to delete the word", required = true)
+                                             @RequestParam("userId") int userId) {
+        logger.info("\"deleteWordFromPersonal?wordId=" + wordId + "&lvl=" + lvl + "&userId=" + userId + "\"");
+        logger.info("Delete word from personal vocabulary.");
+
+        User user = userService.findById(userId);
+
+        wordService.deleteWordFromPersonalVocabulary(wordId, user);
+
+        logger.info("Word was deleted from personal vocabulary!");
+
+        if (lvl != null) {
+            logger.info("Word was on the lvl page, redirect to the lvl page.");
+            return wordService.findAllByLevel(lvl);
+        }
+
+        logger.info("Return all words.");
+        return wordService.findAll();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DataErrorResponse> handleException(CustomDataException exception) {
+
+        DataErrorResponse response = new DataErrorResponse();
+        response.setStatus(exception.getStatus().value());
+        response.setMessage(exception.getMessage());
+        response.setTimeStamp(System.currentTimeMillis());
+
+        return new ResponseEntity<DataErrorResponse>(response, exception.getStatus());
+    }
+}

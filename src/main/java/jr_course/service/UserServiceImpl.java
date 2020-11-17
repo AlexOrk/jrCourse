@@ -5,7 +5,10 @@ import jr_course.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import jr_course.exception.*;
 
 import java.util.List;
 
@@ -21,31 +24,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll(int adminId) {
-        logger.info("\"findAll(adminId)\"");
+    public List<User> findAllExceptAdmin() {
+        logger.info("\"findAllExceptAdmin()\"");
         logger.info("Find all users except admin.");
-        List<User> users = userRepository.findAll();
 
-        User admin = userRepository.findById(adminId);
-
-        // delete admin from list of users
-        users.removeIf(nextUser -> nextUser.getUsername().equals(admin.getUsername()));
-        logger.info("Return all users except admin.");
-        return users;
+        return userRepository.findAllByAdminFalse();
     }
 
     @Override
-    public List<User> findUser(String name) {
-        logger.info("\"findUser(name)\"");
+    public List<User> findUsersByParam(String param) {
+        logger.info("\"findUsersByParam(param)\"");
         logger.info("Find users by username or first name or last name.");
 
-        name = name.trim();
-        List<User> user = userRepository.findByUsernameContainsOrFirstnameContainsOrLastnameContainsAllIgnoreCase(
-                    name, name, name);
+        param = param.trim();
+        List<User> user = userRepository
+                .findByUsernameContainsAndAdminFalseOrFirstnameContainsAndAdminFalseOrLastnameContainsAndAdminFalseAllIgnoreCase(
+                param, param, param);
 
-        if (user.isEmpty()) {
-            logger.info("users list is empty.");
-        }
+        if (user.isEmpty()) logger.info("Users list is empty.");
+
         logger.info("Return users.");
         return user;
     }
@@ -54,20 +51,30 @@ public class UserServiceImpl implements UserService {
     public User findById(int id) {
         logger.info("\"findById(id)\"");
         logger.info("Find user by id " + id + ".");
-        return userRepository.findById(id);
+        User user = null;
+
+        if ((user = userRepository.findById(id)) == null)
+            throw new DataNotFoundException("User with id " + id + " was not found.");
+        return user;
     }
 
     @Override
     public void deleteById(int id) {
         logger.info("\"deleteById(id)\"");
         logger.info("Delete user by id " + id + ".");
-        userRepository.deleteById(id);
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            logger.info("User was deleted!");
+        } else throw new DataNotFoundException("User with id " + id + " was not found.");
     }
 
+    @Transactional
+    @Modifying
     @Override
-    public void deleteAllExceptAdmin(int adminId) {
-        logger.info("\"deleteAllExceptAdmin(adminId)\"");
+    public void deleteAllExceptAdmin() {
+        logger.info("\"deleteAllExceptAdmin()\"");
         logger.info("Delete all users except admin.");
-        userRepository.deleteAllExceptAdmin(adminId);
+        userRepository.deleteAllByAdminFalse();
+        logger.info("All users was deleted!");
     }
 }

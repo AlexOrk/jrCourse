@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface UserService {
 
-    public List<User> findAll(int id);
+    public List<User> findAllExceptAdmin();
     public User findById(int id);
-    public List<User> findUser(String name);
+    public List<User> findUsersByParam(String param);
 
     public void deleteById(int id);
-    public void deleteAllExceptAdmin(int id);
+    public void deleteAllExceptAdmin();
 }

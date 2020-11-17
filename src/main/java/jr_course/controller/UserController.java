@@ -1,16 +1,23 @@
 package jr_course.controller;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import jr_course.entity.User;
+import jr_course.exception.main.CustomDataException;
 import jr_course.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jr_course.exception.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping(value = "/users", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public class UserController {
     // Controller for admin section
 
@@ -23,51 +30,61 @@ public class UserController {
     }
 
     // show all users except admin
-    @GetMapping("/showUsers")
-    public List<User> showUsers(@RequestParam("adminId") int adminId) {
-        logger.info("\"/users/showUsers?adminId=" + adminId + "\"");
+    @GetMapping()
+    @ApiOperation(value = "Show all users", notes = "Find all users except admin", response = List.class)
+    public List<User> showUsers() {
+        logger.info("\"/users\"");
 
-        return userService.findAll(adminId);
+        return userService.findAllExceptAdmin();
     }
 
     @DeleteMapping("/delete")
-    public List<User> deleteUser(@RequestParam("userId") int userId, @RequestParam("adminId") int adminId) {
-        logger.info("\"/users/deleteUser?userId=" + userId + "&adminId" + adminId + "\"");
+    @ApiOperation(value = "Delete user", notes = "Delete user by user id and return all users", response = List.class)
+    public List<User> deleteUser(@ApiParam(value = "Id value for user you need to delete", required = true)
+                                 @RequestParam("userId") int userId) {
+        logger.info("\"/users/deleteUser?userId=" + userId + "\"");
 
         userService.deleteById(userId);
 
-        logger.info("User was deleted!");
         logger.info("Return all users.");
-        return userService.findAll(adminId);
+        return userService.findAllExceptAdmin();
     }
 
     @DeleteMapping("/deleteAll")
-    public List<User> deleteAllUsers(@RequestParam("adminId") int adminId) {
-        logger.info("\"/users/deleteAllUsers?adminId=" + adminId + "\"");
+    @ApiOperation(value = "Delete all users", notes = "Delete all users except admin", response = List.class)
+    public List<User> deleteAllUsers() {
+        logger.info("\"/users/deleteAllUsers\"");
 
-        userService.deleteAllExceptAdmin(adminId);
+        userService.deleteAllExceptAdmin();
 
-        logger.info("Return all users.");
-        return userService.findAll(adminId);
+        logger.info("Return empty list");
+        return new ArrayList<>();
     }
 
     @GetMapping("/search")
-    public List<User> searchUser(@RequestParam(value = "user", required = false) String user,
-                         @RequestParam("adminId") int adminId) {
-        logger.info("\"/users/searchUser?user=" + user + "&adminId=" + adminId + "\"");
+    @ApiOperation(value = "Search user by param",
+            notes = "If param exists, find and return users by param, otherwise return all", response = List.class)
+    public List<User> searchUser(@ApiParam(value = "Param value for user you need to find", required = true)
+                                 @RequestParam(value = "param", required = false) String param) {
+        logger.info("\"/users/searchUser?param=" + param + "\"");
 
-        if (user == null || user.trim().isEmpty()) {
+        if (param == null || param.trim().isEmpty()) {
             logger.info("Return all users.");
-            return userService.findAll(adminId);
+            return userService.findAllExceptAdmin();
         }
 
-        logger.info("Return user.");
-        return userService.findUser(user);
+        logger.info("Return found users.");
+        return userService.findUsersByParam(param);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DataErrorResponse> handleException(CustomDataException exception) {
+
+        DataErrorResponse response = new DataErrorResponse();
+        response.setStatus(exception.getStatus().value());
+        response.setMessage(exception.getMessage());
+        response.setTimeStamp(System.currentTimeMillis());
+
+        return new ResponseEntity<DataErrorResponse>(response, exception.getStatus());
     }
 }
-/*
-Вывести всех юзеров кроме админа +
-Удалить юзера по id +
-Удалить всех юзеров кроме админа +
-Найти юзера по id +
- */

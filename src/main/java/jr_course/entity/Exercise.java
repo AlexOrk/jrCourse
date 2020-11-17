@@ -1,36 +1,59 @@
 package jr_course.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Entity
 @Table(name="exercise")
-public class Exercise {
+@JacksonXmlRootElement(localName = "exercise")
+@JsonPropertyOrder({"id", "description", "task", "answer"})
+@ApiModel(description = "Details about the exercise for learning grammar")
+public class Exercise implements Serializable {
 
+	@ApiModelProperty(notes = "The unique id of the exercise")
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
 
+	@ApiModelProperty(notes = "The exercise's description")
 	@Column(name="description")
+	@NotNull(message="is required")
+	@Size(max = 150, message = "is required")
 	private String description;
 
+	@ApiModelProperty(notes = "The exercise's task")
 	@Column(name="task")
+	@NotNull(message="is required")
+	@Size(max = 300, message = "is required")
 	private String task;
 
+	@ApiModelProperty(notes = "The exercise's answer")
 	@Column(name="answer")
+	@NotNull(message="is required")
+	@Size(max = 150, message = "is required")
 	private String answer;
 
 	@ManyToOne
 	@JoinColumn(name = "grammar_id", nullable = false)
+	@JsonIgnore
 	private Grammar grammar;
 
 	public Exercise() {}
 
-	public Exercise(String description, String task, String answer, Grammar grammar) {
+	public Exercise(String description, String task, String answer) {
 		this.description = description;
 		this.task = task;
 		this.answer = answer;
-		this.grammar = grammar;
 	}
 
 	public int getId() {
