@@ -53,19 +53,6 @@ public class GrammarController {
     public Grammar saveGrammar(@RequestBody Grammar grammar) {
         logger.info("\"/grammar/saveGrammar\"");
 
-        // no need yet
-//        ObjectMapper mapper = new ObjectMapper();
-//        StringReader reader = new StringReader(body);
-//
-//        Grammar grammar = null;
-//
-//        try {
-//            grammar = mapper.readValue(reader, Grammar.class);
-//            logger.info("Grammar was read.");
-//        } catch (IOException e) {
-//            logger.debug(e.getMessage());
-//            e.printStackTrace();
-//        }
         grammarService.save(grammar);
         logger.info("Grammar was saved!");
         return grammar;

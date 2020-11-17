@@ -54,10 +54,12 @@ public class WordController {
 
     @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Save word", notes = "Save word to the word list", response = Word.class)
-    public Word saveWord(@RequestBody String newWord) {
+    public Word saveWord(@RequestBody Word word) {
         logger.info("\"/words/saveWord\"");
-        
-        return wordService.save(newWord);
+
+        wordService.save(word);
+        logger.info("Word was saved!");
+        return word;
     }
 
     @DeleteMapping("/delete")

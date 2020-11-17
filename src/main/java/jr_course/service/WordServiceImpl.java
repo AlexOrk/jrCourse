@@ -65,49 +65,12 @@ public class WordServiceImpl implements WordService {
 	}
 
 	@Override
-	public Word save(String newWord) {
-		logger.info("\"save(newWord)\"");
-		logger.info("Save a word " + newWord + ".");
-
-		JSONObject root = new JSONObject(newWord);
-		String level = root.getString("level");
-		String jpKanji = root.getString("jpKanji");
-		String jpKana = root.getString("jpKana");
-		String ruWord = root.getString("ruWord");
-		String description = root.getString("description");
-
-		if (!(level.equals("easy") || level.equals("medium")
-				|| level.equals("hard")))
-			throw new IncorrectDataInputException("Incorrect level data input - " + level);
-
-		if (!jpKanji.isEmpty() && !jpKanji.matches("^[\\p{sc=Han}\\p{sc=Hiragana}\\p{sc=Katakana}]+$"))
-			throw new IncorrectDataInputException("Incorrect jpKanji data input - " + jpKanji);
-
-		if (!jpKana.matches("^[\\p{sc=Hiragana}\\p{sc=Katakana}]+$"))
-			throw new IncorrectDataInputException("Incorrect jpKana data input - " + jpKana);
-
-		if (!ruWord.matches("^([а-яА-Я0-9()/.,-]+(\\s)?)+$"))
-			throw new IncorrectDataInputException("Incorrect ruWord data input - " + ruWord);
-
-		if (description.trim().isEmpty())
-			throw new IncorrectDataInputException("Incorrect description data input - " + description);
-
-		ObjectMapper mapper = new ObjectMapper();
-		StringReader reader = new StringReader(newWord);
-
-		Word word = null;
-		try {
-			word = mapper.readValue(reader, Word.class);
-			logger.info("Word was read.");
-		} catch (IOException e) {
-			logger.debug(e.getMessage());
-			logger.debug("Incorrect data input - " + newWord);
-		}
+	public void save(Word word) {
+		logger.info("\"save(word)\"");
+		logger.info("Save a word " + word + ".");
 
 		wordRepository.save(word);
-
 		logger.info("Word was saved!");
-		return word;
 	}
 
 	@Override
