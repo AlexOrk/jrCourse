@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,23 +29,37 @@ public class Word implements Serializable {
 
 	@ApiModelProperty(notes = "The word's level")
 	@Column(name="level")
+	@NotNull(message="is required")
+	@Pattern(regexp = "^easy$|^medium$|^hard$", message = "could be easy, medium or hard")
 	private String level;
 
 	@ApiModelProperty(notes = "The word written in Japanese character (kanji)")
 	@Column(name="jp_kanji")
+	@Size(max = 10, message = "is required")
+	@Pattern(regexp = "^[\\p{sc=Han}\\p{sc=Hiragana}\\p{sc=Katakana}]+$",
+			message = "Only kanji, hiragana or katakana")
 	private String jpKanji;
 
 	@ApiModelProperty(notes = "The word written in Japanese alphabet (hiragana or katakana)")
 	@Column(name="jp_kana")
+	@NotNull(message="is required")
+	@Size(max = 20, message = "is required")
+	@Pattern(regexp = "^[\\p{sc=Hiragana}\\p{sc=Katakana}]+$",
+			message = "Only hiragana or katakana")
 	private String jpKana;
 
-	@NotNull
 	@ApiModelProperty(notes = "The word written in Russian")
 	@Column(name="ru_word")
+	@NotNull
+	@Size(max = 20, message = "is required")
+	@Pattern(regexp = "^([а-яА-Я0-9()/.,-]+(\\s)?)+$",
+			message = "Only cyrillic characters, 0-9 and symbols ()/.,-")
 	private String ruWord;
 
 	@ApiModelProperty(notes = "The word's description")
 	@Column(name="description")
+	@NotNull
+	@Size(max = 255, message = "is required")
 	private String description;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
