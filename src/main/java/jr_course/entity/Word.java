@@ -50,16 +50,16 @@ public class Word implements Serializable {
 
 	@ApiModelProperty(notes = "The word written in Russian")
 	@Column(name="ru_word")
-	@NotNull
+	@NotNull(message="is required")
 	@Size(max = 20, message = "is required")
-	@Pattern(regexp = "^([а-яА-Я0-9()/.,-]+(\\s)?)+$",
+	@Pattern(regexp = "^([а-яА-Я0-9()/.,\\-!?]+(\\s)?)+$",
 			message = "Only cyrillic characters, 0-9 and symbols ()/.,-")
 	private String ruWord;
 
 	@ApiModelProperty(notes = "The word's description")
 	@Column(name="description")
-	@NotNull
-	@Size(max = 255, message = "is required")
+	@NotNull(message="is required")
+	@Size(max = 150, message = "is required")
 	private String description;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,

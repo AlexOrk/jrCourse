@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
@@ -24,10 +26,14 @@ public class Note implements Serializable {
 
 	@ApiModelProperty(notes = "The note's name")
 	@Column(name="name")
+	@NotNull(message="is required")
+	@Size(max = 30, message = "is required")
 	private String name;
 
 	@ApiModelProperty(notes = "The note's content")
 	@Column(name="content")
+	@NotNull(message="is required")
+	@Size(max = 300, message = "is required")
 	private String content;
 
 	@ManyToOne

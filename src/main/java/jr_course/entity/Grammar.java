@@ -9,9 +9,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,24 +29,31 @@ public class Grammar implements Serializable {
 
     @ApiModelProperty(notes = "The grammar's level")
     @Column(name="level")
-    @NotNull
+    @NotNull(message="is required")
     @Min(value = 1, message = "must be greater than or equal to one")
     @Max(value = 5, message = "must be less than or equal to five")
     private Integer level;
 
     @ApiModelProperty(notes = "The grammar's formula")
     @Column(name="formula")
-    @NotNull
+    @NotNull(message="is required")
+    @Size(max = 20, message = "is required")
+    @Pattern(regexp = "^[\\p{sc=Han}\\p{sc=Hiragana}\\p{sc=Katakana}。、「」？！〜]+$",
+            message = "Only kanji, hiragana or katakana")
     private String formula;
 
     @ApiModelProperty(notes = "The example of using grammar")
     @Column(name="example")
-    @NotNull
+    @NotNull(message="is required")
+    @Size(max = 150, message = "is required")
+    @Pattern(regexp = "^[\\p{sc=Han}\\p{sc=Hiragana}\\p{sc=Katakana}a-zA-Z0-9.,?!()（）。、「」？！〜/\\-]+$",
+            message = "Only kanji, hiragana, katakana or latin characters, 0-9 and symbols (.,?!()（）。、「」？！〜/-)")
     private String example;
 
     @ApiModelProperty(notes = "The grammar's description")
     @Column(name="description")
-    @NotNull
+    @NotNull(message="is required")
+    @Size(max = 300, message = "is required")
     private String description;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,

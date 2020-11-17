@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
@@ -25,14 +27,20 @@ public class Exercise implements Serializable {
 
 	@ApiModelProperty(notes = "The exercise's description")
 	@Column(name="description")
+	@NotNull(message="is required")
+	@Size(max = 150, message = "is required")
 	private String description;
 
 	@ApiModelProperty(notes = "The exercise's task")
 	@Column(name="task")
+	@NotNull(message="is required")
+	@Size(max = 300, message = "is required")
 	private String task;
 
 	@ApiModelProperty(notes = "The exercise's answer")
 	@Column(name="answer")
+	@NotNull(message="is required")
+	@Size(max = 150, message = "is required")
 	private String answer;
 
 	@ManyToOne
