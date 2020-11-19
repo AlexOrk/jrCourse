@@ -43,7 +43,7 @@ public class Consumer {
         List<Exercise> exercises = objectMapper.readValue(message, List.class);
         if (exercises.isEmpty())
             throw new AmqpRejectAndDontRequeueException("Exercise list is empty!");
-        logger.info("On exercise : {}" + exercises.toString());
+        logger.info("On exercise: " + exercises.toString());
     }
 
     @RabbitListener(queues = "q.get.note.work")
@@ -51,7 +51,7 @@ public class Consumer {
         List<Note> notes = objectMapper.readValue(message, List.class);
         if (notes.isEmpty())
             throw new AmqpRejectAndDontRequeueException("Note list is empty!");
-        logger.info("On note : {}", notes.toString());
+        logger.info("On note : " + notes.toString());
     }
 
     @RabbitListener(queues = "q.get.word.work")
@@ -59,7 +59,7 @@ public class Consumer {
         List<Word> words = objectMapper.readValue(message, List.class);
         if (words.isEmpty())
             throw new AmqpRejectAndDontRequeueException("Word list is empty!");
-        logger.info("On word : {}", words.toString());
+        logger.info("On word : " + words.toString());
     }
 
     @RabbitListener(queues = "q.get.grammar.work")
@@ -67,7 +67,7 @@ public class Consumer {
         List<Grammar> grammar = objectMapper.readValue(message, List.class);
         if (grammar.isEmpty())
             throw new AmqpRejectAndDontRequeueException("Grammar list is empty!");
-        logger.info("On grammar: {}", grammar.toString());
+        logger.info("On grammar: " + grammar.toString());
     }
 
     @RabbitListener(queues = "q.get.user.work")
@@ -75,7 +75,7 @@ public class Consumer {
         List<User> users = objectMapper.readValue(message, List.class);
         if (users.isEmpty())
             throw new AmqpRejectAndDontRequeueException("User list is empty!");
-        logger.info("On user: {}", users.toString());
+        logger.info("On user: " + users.toString());
     }
 
     // Post
@@ -120,34 +120,24 @@ public class Consumer {
     public boolean isCorrectWord(Word word) {
         if (word.getLevel() == null
                 || word.getLevel().isEmpty()
-                || !(word.getLevel().matches("^easy$|^medium$|^hard$") && word.getLevel().length() <= 10)) {
-            logger.info("level");
+                || !(word.getLevel().matches("^easy$|^medium$|^hard$") && word.getLevel().length() <= 10))
             return false;
-        }
+
         if (word.getJpKanji() != null && !word.getJpKanji().isEmpty()) {
-            logger.info("aaaaaaaaaaa");
             if (!(word.getJpKanji().matches("^[\\p{sc=Han}\\p{sc=Hiragana}\\p{sc=Katakana}]+$")
-                    && word.getJpKanji().length() <= 20)) {
-                logger.info("kanji");
+                    && word.getJpKanji().length() <= 20))
                 return false;
-            }
         }
         if (word.getJpKana() == null
                 || word.getJpKana().isEmpty()
-                || !(word.getJpKana().matches("^[\\p{sc=Hiragana}\\p{sc=Katakana}]+$") && word.getJpKana().length() <= 20)) {
-            logger.info("kana");
+                || !(word.getJpKana().matches("^[\\p{sc=Hiragana}\\p{sc=Katakana}]+$") && word.getJpKana().length() <= 20))
             return false;
-        }
+
         if (word.getRuWord() == null
                 || word.getRuWord().isEmpty()
-                || !(word.getRuWord().matches("^([а-яА-Я0-9()/.,\\-!?]+(\\s)?)+$") && word.getRuWord().length() <= 150)) {
-            logger.info("ru");
+                || !(word.getRuWord().matches("^([а-яА-Я0-9()/.,\\-!?]+(\\s)?)+$") && word.getRuWord().length() <= 150))
             return false;
-        }
-        if (word.getDescription() == null) {
-            logger.info("des");
-            return false;
-        }
-        return true;
+
+        return word.getDescription() != null;
     }
 }

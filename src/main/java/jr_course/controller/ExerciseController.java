@@ -38,7 +38,7 @@ public class ExerciseController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "Show all exercises", notes = "Find all exercises by grammar id", response = List.class)
+    @ApiOperation(value = "Find all exercises", notes = "Find all exercises by grammar id", response = List.class)
     public List<Exercise> findExercises(@ApiParam(value = "Id value for grammar you need to retrieve", required = true)
                                         @RequestParam("grammarId") int grammarId) {
         logger.info("\"/exercises?grammarId=" + grammarId + "\"");

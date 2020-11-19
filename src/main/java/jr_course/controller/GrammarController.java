@@ -35,7 +35,7 @@ public class GrammarController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "Show all grammar", notes = "Find and return all grammar", response = List.class)
+    @ApiOperation(value = "Find all grammar", notes = "Find and return all grammar", response = List.class)
     public List<Grammar> findGrammar() {
         logger.info("\"/grammar\"");
 
@@ -45,7 +45,7 @@ public class GrammarController {
     }
 
     @GetMapping("/lvl/{lvl}")
-    @ApiOperation(value = "Show all grammar by level",
+    @ApiOperation(value = "Find all grammar by level",
             notes = "Find and return all grammar by level", response = List.class)
     public List<Grammar> findGrammarByLevel(@PathVariable Integer lvl) {
         logger.info("\"/grammar/lvl/" + lvl + "\"");

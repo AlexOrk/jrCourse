@@ -38,7 +38,7 @@ public class WordController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "Show all words", notes = "Find and return all words", response = List.class)
+    @ApiOperation(value = "Find all words", notes = "Find and return all words", response = List.class)
     public List<Word> findWords() {
         logger.info("\"/words\"");
 
@@ -48,7 +48,7 @@ public class WordController {
     }
 
     @GetMapping("/lvl/{lvl}")
-    @ApiOperation(value = "Show all words by level",
+    @ApiOperation(value = "Find all words by level",
             notes = "Find and return all words by level", response = List.class)
     public List<Word> findWordsByLevel(@PathVariable String lvl) {
         logger.info("\"/words/lvl/" + lvl + "\"");

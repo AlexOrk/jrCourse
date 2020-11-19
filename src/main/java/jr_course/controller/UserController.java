@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "Show all users", notes = "Find all users except admin", response = List.class)
+    @ApiOperation(value = "Find all users", notes = "Find all users except admin", response = List.class)
     public List<User> findUsers() {
         logger.info("\"/users\"");
 
@@ -66,11 +66,11 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    @ApiOperation(value = "Search user by param",
+    @ApiOperation(value = "Find user by param",
             notes = "If param exists, find and return users by param, otherwise return all", response = List.class)
     public List<User> findUser(@ApiParam(value = "Param value for user you need to find", required = true)
                                  @RequestParam(value = "param", required = false) String param) {
-        logger.info("\"/users/searchUser?param=" + param + "\"");
+        logger.info("\"/users/findUser?param=" + param + "\"");
 
         if (param == null || param.trim().isEmpty()) {
             logger.info("Return all users.");
