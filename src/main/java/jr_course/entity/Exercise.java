@@ -100,9 +100,9 @@ public class Exercise implements Serializable {
 	public String toString() {
 		return "Exercise{" +
 				"id=" + id +
-				", description='" + description + '\'' +
-				", task='" + task + '\'' +
-				", answer='" + answer + '\'' +
+				", description='" + description +
+				", task='" + task +
+				", answer='" + answer +
 				", grammar=" + grammar +
 				'}';
 	}

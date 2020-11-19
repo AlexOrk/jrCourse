@@ -85,7 +85,7 @@ public class Note implements Serializable {
 		return "Note{" +
 				"id=" + id +
 				", name=" + name +
-				", content='" + content + '\'' +
+				", content='" + content +
 				", user=" + user +
 				'}';
 	}

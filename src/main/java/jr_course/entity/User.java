@@ -167,4 +167,17 @@ public class User implements Serializable {
     public void setNoteCollection(Collection<Note> noteCollection) {
         this.noteCollection = noteCollection;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username +
+                ", firstname='" + firstname +
+                ", lastname='" + lastname +
+                ", mail='" + mail +
+                ", admin=" + admin +
+                ", noteCollection=" + noteCollection +
+                '}';
+    }
 }

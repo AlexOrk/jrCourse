@@ -151,10 +151,9 @@ public class Grammar implements Serializable {
         return "Grammar{" +
                 "id=" + id +
                 ", level=" + level +
-                ", formula='" + formula + '\'' +
-                ", example='" + example + '\'' +
-                ", description='" + description + '\'' +
-                ", userCollection=" + userCollection +
+                ", formula='" + formula +
+                ", example='" + example +
+                ", description='" + description +
                 ", exerciseCollection=" + exerciseCollection +
                 '}';
     }

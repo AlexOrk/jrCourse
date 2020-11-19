@@ -6,6 +6,7 @@ import jr_course.entity.Grammar;
 import jr_course.entity.User;
 import jr_course.service.GrammarService;
 import jr_course.service.UserService;
+import jr_course.service.mq.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,25 +25,29 @@ public class GrammarController {
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
     private GrammarService grammarService;
     private UserService userService;
+    private Producer producer;
 
     @Autowired
-    public GrammarController(GrammarService grammarService, UserService userService) {
+    public GrammarController(GrammarService grammarService, UserService userService, Producer producer) {
         this.grammarService = grammarService;
         this.userService = userService;
+        this.producer = producer;
     }
 
     @GetMapping()
     @ApiOperation(value = "Show all grammar", notes = "Find and return all grammar", response = List.class)
-    public List<Grammar> showGrammar() {
+    public List<Grammar> findGrammar() {
         logger.info("\"/grammar\"");
 
-        return grammarService.findAll();
+        List<Grammar> grammarList = grammarService.findAll();
+        producer.sendMessage(grammarList, "Grammar");
+        return grammarList;
     }
 
     @GetMapping("/lvl/{lvl}")
     @ApiOperation(value = "Show all grammar by level",
             notes = "Find and return all grammar by level", response = List.class)
-    public List<Grammar> showGrammarByLevel(@PathVariable Integer lvl) {
+    public List<Grammar> findGrammarByLevel(@PathVariable Integer lvl) {
         logger.info("\"/grammar/lvl/" + lvl + "\"");
 
         return grammarService.findAllByLevel(lvl);
@@ -84,7 +89,6 @@ public class GrammarController {
             logger.info("Return all words.");
             return grammarService.findAll();
         }
-
         logger.info("Return words with an input parameter.");
         return grammarService.findByDifferentParameters(param);
     }
@@ -102,14 +106,12 @@ public class GrammarController {
         logger.info("Add grammar to personal grammar list.");
 
         User user = userService.findById(userId);
-
         grammarService.addGrammarToPersonalList(user, grammarId);
 
         if (lvl != null) {
             logger.info("Grammar was on the lvl page, redirect to the lvl page.");
             return grammarService.findAllByLevel(lvl);
         }
-
         logger.info("Return all grammar.");
         return grammarService.findAll();
     }
@@ -129,14 +131,12 @@ public class GrammarController {
         User user = userService.findById(userId);
 
         grammarService.deleteGrammarFromPersonalList(grammarId, user);
-
         logger.info("Grammar was deleted from personal grammar list!");
 
         if (lvl != null) {
             logger.info("Grammar was on the lvl page, redirect to the lvl page.");
             return grammarService.findAllByLevel(lvl);
         }
-
         logger.info("Return all grammar.");
         return grammarService.findAll();
     }

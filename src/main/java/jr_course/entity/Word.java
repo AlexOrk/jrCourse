@@ -152,11 +152,10 @@ public class Word implements Serializable {
 		return "Word{" +
 				"id=" + id +
 				", level=" + level +
-				", jpKanji='" + jpKanji + '\'' +
-				", jpKana='" + jpKana + '\'' +
-				", ruWord='" + ruWord + '\'' +
-				", description='" + description + '\'' +
-				", userCollection=" + userCollection +
+				", jpKanji='" + jpKanji +
+				", jpKana='" + jpKana +
+				", ruWord='" + ruWord +
+				", description='" + description +
 				'}';
 	}
 }

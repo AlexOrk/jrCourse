@@ -3,11 +3,11 @@ package jr_course.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import jr_course.entity.Grammar;
 import jr_course.entity.Note;
 import jr_course.entity.User;
 import jr_course.exception.main.CustomDataException;
 import jr_course.service.*;
+import jr_course.service.mq.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +27,24 @@ public class NoteController {
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
     private NoteService noteService;
     private UserService userService;
+    private Producer producer;
 
     @Autowired
-    public NoteController(NoteService noteService, UserService userService) {
+    public NoteController(NoteService noteService, UserService userService, Producer producer) {
         this.noteService = noteService;
         this.userService = userService;
+        this.producer = producer;
     }
 
     @GetMapping()
-    @ApiOperation(value = "Show all notes", notes = "Find all notes by user id", response = List.class)
-    public List<Note> showNotes(@ApiParam(value = "Id value for user whose notes you need to find", required = true)
+    @ApiOperation(value = "Find all notes", notes = "Find all notes by user id", response = List.class)
+    public List<Note> findNotes(@ApiParam(value = "Id value for user whose notes you need to find", required = true)
                                 @RequestParam("userId") int userId) {
         logger.info("\"/notes/?userId=" + userId + "\"");
 
-        return noteService.findAllByUserId(userId);
+        List<Note> noteList = noteService.findAllByUserId(userId);
+        producer.sendMessage(noteList, "Note");
+        return noteList;
     }
 
     @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})

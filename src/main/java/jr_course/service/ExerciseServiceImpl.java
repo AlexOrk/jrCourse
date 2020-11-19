@@ -29,6 +29,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         logger.info("Find all words by grammar id " + grammarId + ".");
         if (!grammarRepository.existsById(grammarId))
             throw new DataNotFoundException("Grammar with id " + grammarId + " was not found.");
+
         return exerciseRepository.findAllByGrammar_Id(grammarId);
     }
 

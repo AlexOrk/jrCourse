@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import jr_course.exception.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,5 +43,11 @@ public class NoteServiceTest {
         when(userRepository.existsById(1)).thenReturn(false);
 
         assertEquals(DataNotFoundException.class, DataNotFoundException.class);
+
+        when(noteRepository.findAllByUser_Id(1)).thenReturn(new ArrayList<>());
+        when(userRepository.existsById(1)).thenReturn(true);
+        notes = noteService.findAllByUserId(1);
+
+        assertTrue(notes.isEmpty());
     }
 }

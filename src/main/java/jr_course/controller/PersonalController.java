@@ -35,7 +35,7 @@ public class PersonalController {
     @GetMapping("/words")
     @ApiOperation(value = "Show all words", notes = "Find and return all words in the user's vocabulary by user id",
             response = List.class)
-    public List<Word> showWords(@ApiParam(value = "Id value for user whose words you need to find", required = true)
+    public List<Word> findWords(@ApiParam(value = "Id value for user whose words you need to find", required = true)
                                 @RequestParam("userId") int userId) {
         logger.info("\"/personal/words?userId=" + userId + "\"");
 
@@ -45,7 +45,7 @@ public class PersonalController {
     @GetMapping("/grammar")
     @ApiOperation(value = "Show all grammar", notes = "Find and return all grammar in the user's list by user id",
             response = List.class)
-    public List<Grammar> showGrammar(@ApiParam(value = "Id value for user whose grammar you need to find", required = true)
+    public List<Grammar> findGrammar(@ApiParam(value = "Id value for user whose grammar you need to find", required = true)
                                      @RequestParam("userId") int userId) {
         logger.info("\"/personal/grammar?userId=" + userId + "\"");
 

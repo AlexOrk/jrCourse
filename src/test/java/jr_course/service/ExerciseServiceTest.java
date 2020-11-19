@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import jr_course.exception.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,5 +43,11 @@ public class ExerciseServiceTest {
         when(grammarRepository.existsById(1)).thenReturn(false);
 
         assertEquals(DataNotFoundException.class, DataNotFoundException.class);
+
+        when(exerciseRepository.findAllByGrammar_Id(1)).thenReturn(new ArrayList<>());
+        when(grammarRepository.existsById(1)).thenReturn(true);
+        exercises = exerciseService.findAllByGrammarId(1);
+
+        assertTrue(exercises.isEmpty());
     }
 }
