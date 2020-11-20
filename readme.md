@@ -11,10 +11,10 @@ Available functionality
 ---
 1. View word list and grammar list
 2. Add or remove word and grammar to personal list
-3. Create, edit and remove note
+3. Create, edit and remove notes
 4. Solve grammar exercises
 5. The administrator can see the list of users and delete them
-6. Administrator can add, edit and remove words and grammar to lists
+6. The administrator can add, edit and remove words and grammar to lists
 
 Interaction types
 ---
@@ -24,7 +24,7 @@ There are two ways to fully interact with this app:
 
 Using
 ---
-1. Dictionary section, which has three difficulty levels.  
+1. Dictionary section, which has three levels of difficulty.  
 The user can add, change and delete a word. Each word can be written in
 Japanese characters, Japanese kana (hiragana and katakana), in Russian,
 as well as an additional description with examples of use. There is a word
@@ -63,6 +63,7 @@ Technologies used in the project
 - Documentation - `Swagger`
 - Dependency manager - `Maven`
 - Application Server - `WebSphere`
+- Message-oriented middleware - `RabbitMQ`
 ---
 Note
 ---

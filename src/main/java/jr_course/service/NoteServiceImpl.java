@@ -29,6 +29,7 @@ public class NoteServiceImpl implements NoteService {
         logger.info("Find all words by user id " + id + ".");
         if (!userRepository.existsById(id))
             throw new DataNotFoundException("User with id " + id + " was not found.");
+
         return noteRepository.findAllByUser_Id(id);
     }
 

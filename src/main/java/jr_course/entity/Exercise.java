@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -27,20 +26,20 @@ public class Exercise implements Serializable {
 
 	@ApiModelProperty(notes = "The exercise's description")
 	@Column(name="description")
-	@NotNull(message="is required")
-	@Size(max = 150, message = "is required")
+	@NotNull(message="Is required")
+	@Size(max = 150, message = "Is required")
 	private String description;
 
 	@ApiModelProperty(notes = "The exercise's task")
 	@Column(name="task")
-	@NotNull(message="is required")
-	@Size(max = 300, message = "is required")
+	@NotNull(message="Is required")
+	@Size(max = 300, message = "Is required")
 	private String task;
 
 	@ApiModelProperty(notes = "The exercise's answer")
 	@Column(name="answer")
-	@NotNull(message="is required")
-	@Size(max = 150, message = "is required")
+	@NotNull(message="Is required")
+	@Size(max = 150, message = "Is required")
 	private String answer;
 
 	@ManyToOne
@@ -100,9 +99,9 @@ public class Exercise implements Serializable {
 	public String toString() {
 		return "Exercise{" +
 				"id=" + id +
-				", description='" + description + '\'' +
-				", task='" + task + '\'' +
-				", answer='" + answer + '\'' +
+				", description='" + description +
+				", task='" + task +
+				", answer='" + answer +
 				", grammar=" + grammar +
 				'}';
 	}

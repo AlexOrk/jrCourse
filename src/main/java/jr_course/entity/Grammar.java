@@ -29,31 +29,31 @@ public class Grammar implements Serializable {
 
     @ApiModelProperty(notes = "The grammar's level")
     @Column(name="level")
-    @NotNull(message="is required")
+    @NotNull(message="Is required")
     @Min(value = 1, message = "must be greater than or equal to one")
     @Max(value = 5, message = "must be less than or equal to five")
     private Integer level;
 
     @ApiModelProperty(notes = "The grammar's formula")
     @Column(name="formula")
-    @NotNull(message="is required")
-    @Size(max = 20, message = "is required")
+    @NotNull(message="Is required")
+    @Size(max = 20, message = "Is required")
     @Pattern(regexp = "^[\\p{sc=Han}\\p{sc=Hiragana}\\p{sc=Katakana}。、「」？！〜]+$",
             message = "Only kanji, hiragana or katakana")
     private String formula;
 
     @ApiModelProperty(notes = "The example of using grammar")
     @Column(name="example")
-    @NotNull(message="is required")
-    @Size(max = 150, message = "is required")
+    @NotNull(message="Is required")
+    @Size(max = 150, message = "Is required")
     @Pattern(regexp = "^[\\p{sc=Han}\\p{sc=Hiragana}\\p{sc=Katakana}a-zA-Z0-9.,?!()（）。、「」？！〜/\\-]+$",
             message = "Only kanji, hiragana, katakana or latin characters, 0-9 and symbols (.,?!()（）。、「」？！〜/-)")
     private String example;
 
     @ApiModelProperty(notes = "The grammar's description")
     @Column(name="description")
-    @NotNull(message="is required")
-    @Size(max = 300, message = "is required")
+    @NotNull(message="Is required")
+    @Size(max = 300, message = "Is required")
     private String description;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,
@@ -151,10 +151,9 @@ public class Grammar implements Serializable {
         return "Grammar{" +
                 "id=" + id +
                 ", level=" + level +
-                ", formula='" + formula + '\'' +
-                ", example='" + example + '\'' +
-                ", description='" + description + '\'' +
-                ", userCollection=" + userCollection +
+                ", formula='" + formula +
+                ", example='" + example +
+                ", description='" + description +
                 ", exerciseCollection=" + exerciseCollection +
                 '}';
     }

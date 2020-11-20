@@ -1,18 +1,14 @@
 package jr_course.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jr_course.dao.WordRepository;
 import jr_course.entity.User;
 import jr_course.entity.Word;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jr_course.exception.*;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,14 +26,15 @@ public class WordServiceImpl implements WordService {
 	@Override
 	public List<Word> findAll() {
 		logger.info("\"findAll()\"");
-		logger.info("Find all words in DB.");
+		logger.info("Find all words.");
+
 		return wordRepository.findAll();
 	}
 
 	@Override
 	public List<Word> findAllByLevel(String level) {
 		logger.info("\"findByLevelContains(level)\"");
-		logger.info("Find all words in DB depending on the \"" + level + "\" level.");
+		logger.info("Find all words depending on the \"" + level + "\" level.");
 		if (!(level.equals("easy") || level.equals("medium") || level.equals("hard")))
 			throw new IncorrectDataInputException("Incorrect level data input - " + level);
 
@@ -51,15 +48,11 @@ public class WordServiceImpl implements WordService {
 		Optional<Word> result = wordRepository.findById(id);
 
 		Word word = null;
-
-		if (result.isPresent()) {
-			word = result.get();
-		}
+		if (result.isPresent()) word = result.get();
 		else {
 			logger.warn("Word was not found.");
 			throw new DataNotFoundException("Word with id " + id + " was not found.");
 		}
-
 		logger.info("Return word.");
 		return word;
 	}
@@ -77,7 +70,7 @@ public class WordServiceImpl implements WordService {
 	public void deleteById(int id) {
 		logger.info("\"deleteById(id)\"");
 		logger.info("Delete a word by id " + id + ".");
-		if(wordRepository.existsById(id)) wordRepository.deleteById(id);
+		if (wordRepository.existsById(id)) wordRepository.deleteById(id);
 		else throw new DataNotFoundException("Word with id " + id + " was not found.");
 	}
 

@@ -5,20 +5,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jr_course.entity.User;
 import jr_course.entity.Word;
-import jr_course.exception.main.CustomDataException;
 import jr_course.service.UserService;
 import jr_course.service.WordService;
+import jr_course.service.mq.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jr_course.exception.*;
 
-import java.io.IOException;
-import java.io.StringReader;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,25 +24,29 @@ public class WordController {
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
     private WordService wordService;
     private UserService userService;
+    private Producer producer;
 
     @Autowired
-    public WordController(WordService wordService, UserService userService) {
+    public WordController(WordService wordService, UserService userService, Producer producer) {
         this.wordService = wordService;
         this.userService = userService;
+        this.producer = producer;
     }
 
     @GetMapping()
-    @ApiOperation(value = "Show all words", notes = "Find and return all words", response = List.class)
-    public List<Word> showWords() {
+    @ApiOperation(value = "Find all words", notes = "Find and return all words", response = List.class)
+    public List<Word> findWords() {
         logger.info("\"/words\"");
 
-        return wordService.findAll();
+        List<Word> wordList = wordService.findAll();
+        producer.sendMessage(wordList, "Word");
+        return wordList;
     }
 
     @GetMapping("/lvl/{lvl}")
-    @ApiOperation(value = "Show all words by level",
+    @ApiOperation(value = "Find all words by level",
             notes = "Find and return all words by level", response = List.class)
-    public List<Word> showWordsByLevel(@PathVariable String lvl) {
+    public List<Word> findWordsByLevel(@PathVariable String lvl) {
         logger.info("\"/words/lvl/" + lvl + "\"");
 
         return wordService.findAllByLevel(lvl);
@@ -54,11 +54,10 @@ public class WordController {
 
     @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Save word", notes = "Save word to the word list", response = Word.class)
-    public Word saveWord(@RequestBody Word word) {
-        logger.info("\"/words/saveWord\"");
+    public Word saveWord(@Valid @RequestBody Word word) {
+        logger.info("\"/words/save\"");
 
         wordService.save(word);
-        logger.info("Word was saved!");
         return word;
     }
 
@@ -66,7 +65,7 @@ public class WordController {
     @ApiOperation(value = "Delete word", notes = "Delete word by id and return all words", response = List.class)
     public List<Word> deleteWord(@ApiParam(value = "Id value for word you need to delete", required = true)
                                  @RequestParam("wordId") int wordId) {
-        logger.info("\"/words/deleteWord?wordId=" + wordId + "\"");
+        logger.info("\"/words/delete?wordId=" + wordId + "\"");
 
         wordService.deleteById(wordId);
 
@@ -88,7 +87,6 @@ public class WordController {
             logger.info("Return all words.");
             return wordService.findAll();
         }
-
         logger.info("Return words with an input parameter.");
         return wordService.findByDifferentParameters(param);
     }
@@ -107,14 +105,12 @@ public class WordController {
         logger.info("Add a word to personal vocabulary.");
 
         User user = userService.findById(userId);
-
         wordService.addWordToPersonalVocabulary(user, wordId);
 
         if (lvl != null) {
             logger.info("Word was on the lvl page, redirect to the lvl page.");
             return wordService.findAllByLevel(lvl);
         }
-
         logger.info("Return all words.");
         return wordService.findAll();
     }
@@ -134,26 +130,13 @@ public class WordController {
         User user = userService.findById(userId);
 
         wordService.deleteWordFromPersonalVocabulary(wordId, user);
-
         logger.info("Word was deleted from personal vocabulary!");
 
         if (lvl != null) {
             logger.info("Word was on the lvl page, redirect to the lvl page.");
             return wordService.findAllByLevel(lvl);
         }
-
         logger.info("Return all words.");
         return wordService.findAll();
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<DataErrorResponse> handleException(CustomDataException exception) {
-
-        DataErrorResponse response = new DataErrorResponse();
-        response.setStatus(exception.getStatus().value());
-        response.setMessage(exception.getMessage());
-        response.setTimeStamp(System.currentTimeMillis());
-
-        return new ResponseEntity<DataErrorResponse>(response, exception.getStatus());
     }
 }

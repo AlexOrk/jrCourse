@@ -26,14 +26,14 @@ public class Note implements Serializable {
 
 	@ApiModelProperty(notes = "The note's name")
 	@Column(name="name")
-	@NotNull(message="is required")
-	@Size(max = 30, message = "is required")
+	@NotNull(message="Is required")
+	@Size(max = 30, message = "Is required")
 	private String name;
 
 	@ApiModelProperty(notes = "The note's content")
 	@Column(name="content")
-	@NotNull(message="is required")
-	@Size(max = 300, message = "is required")
+	@NotNull(message="Is required")
+	@Size(max = 300, message = "Is required")
 	private String content;
 
 	@ManyToOne
@@ -85,7 +85,7 @@ public class Note implements Serializable {
 		return "Note{" +
 				"id=" + id +
 				", name=" + name +
-				", content='" + content + '\'' +
+				", content='" + content +
 				", user=" + user +
 				'}';
 	}

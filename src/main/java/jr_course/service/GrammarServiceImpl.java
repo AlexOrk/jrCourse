@@ -26,14 +26,15 @@ public class GrammarServiceImpl implements GrammarService {
     @Override
     public List<Grammar> findAll() {
         logger.info("\"findAll()\"");
-        logger.info("Find all grammar in DB.");
+        logger.info("Find all grammar.");
+
         return grammarRepository.findAll();
     }
 
     @Override
     public List<Grammar> findAllByLevel(int level) {
         logger.info("\"findAllByLevelContains(level)\"");
-        logger.info("Find all words in DB depending on the \"" + level + "\" level.");
+        logger.info("Find all grammar depending on the \"" + level + "\" level.");
         if (!(level >= 1 && level <= 5))
             throw new IncorrectDataInputException("Incorrect level data input - " + level);
 
@@ -47,14 +48,11 @@ public class GrammarServiceImpl implements GrammarService {
         Optional<Grammar> result = grammarRepository.findById(id);
 
         Grammar grammar = null;
-
-        if (result.isPresent()) {
-            grammar = result.get();
-        } else {
+        if (result.isPresent()) grammar = result.get();
+        else {
             logger.warn("Grammar was not found.");
             throw new DataNotFoundException("Grammar with id " + id + " was not found.");
         }
-
         logger.info("Return grammar.");
         return grammar;
     }
@@ -63,7 +61,9 @@ public class GrammarServiceImpl implements GrammarService {
     public void save(Grammar grammar) {
         logger.info("\"save(grammar)\"");
         logger.info("Save a grammar in DB.");
+
         grammarRepository.save(grammar);
+        logger.info("Grammar was saved!");
     }
 
     @Override
@@ -114,7 +114,7 @@ public class GrammarServiceImpl implements GrammarService {
             logger.info("Update grammar.");
             grammarRepository.save(grammar);
             logger.info("Grammar was deleted from personal grammar list!");
-        } else logger.info("Grammar with id + " + grammarId + " was not found in the personal list." );
+        } else logger.info("Grammar with id + " + grammarId + " was not found in the personal list.");
     }
 
     @Override

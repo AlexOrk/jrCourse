@@ -1,5 +1,6 @@
 package jr_course.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jr_course.entity.Exercise;
 import jr_course.entity.Note;
 
