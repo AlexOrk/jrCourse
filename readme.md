@@ -52,6 +52,47 @@ dictionary and a personal set of grammar.
 can view complete information about all users. It is also possible to
 delete a user one at a time, or all users except the administrator.
 
+Working with RabbitMQ
+---
+The application has built-in functionality for working with queues using the
+producer-consumer pattern, implemented using RabbitMQ.  
+Each time the user starts searching for a collection of objects ("/words",
+"/grammar", "/exercises", "/users" or "/notes"), the collection is passed to
+the producer. Depending on the type of object (Word, Grammar, Exercise, User
+or Note, the DirectExchange ("x.get.work") directs the collection to the
+appropriate queue:
+- "q.get.word.work"
+- "q.get.grammar.work"
+- "q.get.exercise.work"
+- "q.get.user.work"
+- "q.get.note.work"  
+
+Then the consumer receives the collection and, using logging, outputs the data
+to the console and writes to a file. If the collection is empty, an
+AmqpRejectAndDontRequeueException is thrown. The Direct Exchange ("x.get.dead")
+then tries to resubmit the object to the consumer. This happens once every 3
+seconds, the time for each next attempt is doubled (but the interval is not more
+than 10 seconds and only 5 attempts). If this fails, then the message is sent to
+the appropriate queue ("q.get.*.dead").  
+
+The application also has a dedicated controller for working with queues
+(MqController).  
+It can be used to save objects (Word, Grammar, Exercise or Note) to the database.
+To store the object, the Direct Exchange ("x.post.work") routes the object to the
+appropriate queue ("q.post.\*.work"). Then the consumer receives the object and
+writes the data to the database. In case the consumer finds an error, the Direct
+Exchange ("x.post.dead") tries to resend the message. This also happens once every
+3 seconds, the time for each next attempt is doubled (but the interval is not more
+than 10 seconds and only 5 attempts). If this fails, then the message is sent to
+the appropriate queue ("q.post.*.dead"). The user receives a message about the
+passage and processing of the request, but not about the result. In case of failure,
+the consumer using logging will display an error message in the console and write it
+to a file.
+
+To demonstrate how it works in case of an exception, the controller "/mq/saveWord"
+does not have a validation check in the form of an @Valid annotation and an
+appropriate filter method ("isCorrectWord") is added on the consumer's side.
+
 
 Technologies used in the project
 ---
@@ -68,6 +109,10 @@ Technologies used in the project
 Note
 ---
 
-The connection to the database is done on the `application.properties` file.
+Connection to the database, to RabbitMQ, is done using the `application.properties` file.
 
-
+For testing, you can use next templates:
+- Word ("description": "", "jpKana": "ぎんこう", "jpKanji": "銀行", "level": "easy", "ruWord": "банк")
+- Грамматика ("level": 2, "formula": "〜の際", "example": "退院の際には色々とお世話になりまして有難うございました",
+"description": "Временной союз со значением «во время», «при», после глагола - дополнительное значение
+«в случае». «Большое вам спасибо за вашу заботу в момент моей выписки из больницы».")
