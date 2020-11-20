@@ -59,7 +59,7 @@ producer-consumer pattern, implemented using RabbitMQ.
 Each time the user starts searching for a collection of objects ("/words",
 "/grammar", "/exercises", "/users" or "/notes"), the collection is passed to
 the producer. Depending on the type of object (Word, Grammar, Exercise, User
-or Note, the DirectExchange ("x.get.work") directs the collection to the
+or Note), the DirectExchange ("x.get.work") directs the collection to the
 appropriate queue:
 - "q.get.word.work"
 - "q.get.grammar.work"
@@ -69,8 +69,8 @@ appropriate queue:
 
 Then the consumer receives the collection and, using logging, outputs the data
 to the console and writes to a file. If the collection is empty, an
-AmqpRejectAndDontRequeueException is thrown. The Direct Exchange ("x.get.dead")
-then tries to resubmit the object to the consumer. This happens once every 3
+AmqpRejectAndDontRequeueException is thrown. Then the Direct Exchange ("x.get.dead")
+tries to resubmit the object to the consumer. This happens once every 3
 seconds, the time for each next attempt is doubled (but the interval is not more
 than 10 seconds and only 5 attempts). If this fails, then the message is sent to
 the appropriate queue ("q.get.*.dead").  
@@ -79,7 +79,7 @@ The application also has a dedicated controller for working with queues
 (MqController).  
 It can be used to save objects (Word, Grammar, Exercise or Note) to the database.
 To store the object, the Direct Exchange ("x.post.work") routes the object to the
-appropriate queue ("q.post.\*.work"). Then the consumer receives the object and
+appropriate queue ("q.post.*.work"). Then the consumer receives the object and
 writes the data to the database. In case the consumer finds an error, the Direct
 Exchange ("x.post.dead") tries to resend the message. This also happens once every
 3 seconds, the time for each next attempt is doubled (but the interval is not more
