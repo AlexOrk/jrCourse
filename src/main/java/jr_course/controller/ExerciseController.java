@@ -1,11 +1,9 @@
 package jr_course.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jr_course.entity.Exercise;
 import jr_course.entity.Grammar;
-import jr_course.exception.main.CustomDataException;
 import jr_course.service.ExerciseService;
 import jr_course.service.GrammarService;
 import jr_course.service.mq.Producer;
@@ -13,12 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jr_course.exception.*;
 
-import java.io.IOException;
-import java.io.StringReader;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -50,7 +45,7 @@ public class ExerciseController {
 
     @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Save exercise", notes = "Save exercise for grammar by grammar id", response = Exercise.class)
-    public Exercise saveExercise(@RequestBody Exercise exercise,
+    public Exercise saveExercise(@Valid @RequestBody Exercise exercise,
                                  @ApiParam(value = "Id value for grammar you need to save", required = true)
                                  @RequestParam("grammarId") int grammarId) {
         logger.info("\"/exercises/saveExercise?grammarId=" + grammarId + "\"");
@@ -76,16 +71,5 @@ public class ExerciseController {
 
         logger.info("Return all exercises.");
         return exerciseService.findAllByGrammarId(grammarId);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<DataErrorResponse> handleException(CustomDataException exception) {
-
-        DataErrorResponse response = new DataErrorResponse();
-        response.setStatus(exception.getStatus().value());
-        response.setMessage(exception.getMessage());
-        response.setTimeStamp(System.currentTimeMillis());
-
-        return new ResponseEntity<DataErrorResponse>(response, exception.getStatus());
     }
 }

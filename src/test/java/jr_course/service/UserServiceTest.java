@@ -72,9 +72,11 @@ public class UserServiceTest {
         User actualUser = userService.findById(1);
 
         assertEquals(expectedUser, actualUser);
+    }
 
-//        when(userRepository.findById(1)).thenReturn(null);
-//
-//        assertEquals(DataNotFoundException.class, DataNotFoundException.class);
+    @Test(expected = DataNotFoundException.class)
+    public void findById_ExceptionTest() {
+        when(userRepository.findById(1)).thenReturn(null);
+        userService.findById(1);
     }
 }

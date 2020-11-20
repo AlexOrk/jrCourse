@@ -11,11 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jr_course.exception.*;
-import jr_course.exception.main.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -55,11 +53,10 @@ public class GrammarController {
 
     @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Save grammar", notes = "Save grammar to the grammar list", response = Grammar.class)
-    public Grammar saveGrammar(@RequestBody Grammar grammar) {
+    public Grammar saveGrammar(@Valid @RequestBody Grammar grammar) {
         logger.info("\"/grammar/saveGrammar\"");
 
         grammarService.save(grammar);
-        logger.info("Grammar was saved!");
         return grammar;
     }
 
@@ -139,16 +136,5 @@ public class GrammarController {
         }
         logger.info("Return all grammar.");
         return grammarService.findAll();
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<DataErrorResponse> handleException(CustomDataException exception) {
-
-        DataErrorResponse response = new DataErrorResponse();
-        response.setStatus(exception.getStatus().value());
-        response.setMessage(exception.getMessage());
-        response.setTimeStamp(System.currentTimeMillis());
-
-        return new ResponseEntity<DataErrorResponse>(response, exception.getStatus());
     }
 }

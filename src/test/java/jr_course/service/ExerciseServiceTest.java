@@ -30,7 +30,7 @@ public class ExerciseServiceTest {
     private GrammarRepository grammarRepository;
 
     @Test
-    public void findAllByUserId_test() {
+    public void findAllByGrammarId_test() {
         Exercise exercise1 = new Exercise();
         Exercise exercise2 = new Exercise();
 

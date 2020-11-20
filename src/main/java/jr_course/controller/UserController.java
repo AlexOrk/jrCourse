@@ -3,16 +3,13 @@ package jr_course.controller;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jr_course.entity.User;
-import jr_course.exception.main.CustomDataException;
 import jr_course.service.UserService;
 import jr_course.service.mq.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jr_course.exception.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,16 +76,5 @@ public class UserController {
 
         logger.info("Return found users.");
         return userService.findUsersByParam(param);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<DataErrorResponse> handleException(CustomDataException exception) {
-
-        DataErrorResponse response = new DataErrorResponse();
-        response.setStatus(exception.getStatus().value());
-        response.setMessage(exception.getMessage());
-        response.setTimeStamp(System.currentTimeMillis());
-
-        return new ResponseEntity<DataErrorResponse>(response, exception.getStatus());
     }
 }

@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jr_course.entity.User;
 import jr_course.entity.Word;
-import jr_course.exception.main.CustomDataException;
 import jr_course.service.UserService;
 import jr_course.service.WordService;
 import jr_course.service.mq.Producer;
@@ -13,12 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jr_course.exception.*;
 
-import java.io.IOException;
-import java.io.StringReader;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -58,11 +54,10 @@ public class WordController {
 
     @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Save word", notes = "Save word to the word list", response = Word.class)
-    public Word saveWord(@RequestBody Word word) {
+    public Word saveWord(@Valid @RequestBody Word word) {
         logger.info("\"/words/save\"");
 
         wordService.save(word);
-        logger.info("Word was saved!");
         return word;
     }
 
@@ -143,16 +138,5 @@ public class WordController {
         }
         logger.info("Return all words.");
         return wordService.findAll();
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<DataErrorResponse> handleException(CustomDataException exception) {
-
-        DataErrorResponse response = new DataErrorResponse();
-        response.setStatus(exception.getStatus().value());
-        response.setMessage(exception.getMessage());
-        response.setTimeStamp(System.currentTimeMillis());
-
-        return new ResponseEntity<DataErrorResponse>(response, exception.getStatus());
     }
 }

@@ -51,18 +51,68 @@ public class WordServiceTest {
         List<Word> words = wordService.findAllByLevel(level);
 
         assertTrue(words.contains(word1) && words.contains(word2));
+
+        when(wordRepository.findAllByLevel(level)).thenReturn(new ArrayList<>());
+        words = wordService.findAllByLevel(level);
+
+        assertTrue(words.isEmpty());
     }
-
-
 
     @Test(expected = IncorrectDataInputException.class)
     public void findAllByLevel_ExceptionTest() {
         String level = "ff";
-        List<Word> words = wordService.findAllByLevel(level);
+        wordService.findAllByLevel(level);
     }
 
     @Test
     public void findById_test() {
+        Word expectedWord = new Word();
 
+        when(wordRepository.findById(1)).thenReturn(java.util.Optional.of(expectedWord));
+        Word actualWord = wordService.findById(1);
+
+        assertEquals(expectedWord, actualWord);
+    }
+
+//    @Test(expected = DataNotFoundException.class)
+//    public void findById_ExceptionTest() {
+//        Word expectedWord = null;
+//        when(wordRepository.findById(1)).thenReturn(java.util.Optional.of(expectedWord));
+//        wordService.findById(1);
+//    }
+
+    @Test
+    public void findAllByUserId_test() {
+        Word word1 = new Word();
+        Word word2 = new Word();
+
+        when(wordRepository.findAllByUserCollection_Id(1)).thenReturn(Arrays.asList(word1, word2));
+        List<Word> words = wordService.findAllByUserId(1);
+
+        assertTrue(words.contains(word1) && words.contains(word2));
+
+        when(wordRepository.findAllByUserCollection_Id(1)).thenReturn(new ArrayList<>());
+        words = wordService.findAllByUserId(1);
+
+        assertTrue(words.isEmpty());
+    }
+
+    @Test
+    public void findByDifferentParameters_test() {
+        String param = "  株式会社 ";
+        Word word1 = new Word();
+        Word word2 = new Word();
+
+        when(wordRepository.findByJpKanjiContainsOrJpKanaContainsOrRuWordContainsAllIgnoreCase(
+                param.trim(), param.trim(), param.trim())).thenReturn(Arrays.asList(word1, word2));
+        List<Word> words = wordService.findByDifferentParameters(param);
+
+        assertTrue(words.contains(word1) && words.contains(word2));
+
+        when(wordRepository.findByJpKanjiContainsOrJpKanaContainsOrRuWordContainsAllIgnoreCase(
+                param.trim(), param.trim(), param.trim())).thenReturn(new ArrayList<>());
+        words = wordService.findByDifferentParameters(param);
+
+        assertTrue(words.isEmpty());
     }
 }

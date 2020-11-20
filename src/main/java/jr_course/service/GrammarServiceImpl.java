@@ -61,7 +61,9 @@ public class GrammarServiceImpl implements GrammarService {
     public void save(Grammar grammar) {
         logger.info("\"save(grammar)\"");
         logger.info("Save a grammar in DB.");
+
         grammarRepository.save(grammar);
+        logger.info("Grammar was saved!");
     }
 
     @Override
