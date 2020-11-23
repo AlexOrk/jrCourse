@@ -21,19 +21,10 @@ public class Producer<T> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
     private RabbitTemplate rabbitTemplate;
-    private ExerciseRepository exerciseRepository;
-    private NoteRepository noteRepository;
-    private GrammarRepository grammarRepository;
-    private WordRepository wordRepository;
 
     @Autowired
-    public Producer(RabbitTemplate rabbitTemplate, ExerciseRepository exerciseRepository,
-                    NoteRepository noteRepository, GrammarRepository grammarRepository, WordRepository wordRepository) {
+    public Producer(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
-        this.exerciseRepository = exerciseRepository;
-        this.noteRepository = noteRepository;
-        this.grammarRepository = grammarRepository;
-        this.wordRepository = wordRepository;
     }
 
     private ObjectMapper objectMapper = new ObjectMapper();
