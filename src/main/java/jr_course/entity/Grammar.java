@@ -38,8 +38,8 @@ public class Grammar implements Serializable {
     @Column(name="formula")
     @NotNull(message="Is required")
     @Size(max = 20, message = "Is required")
-    @Pattern(regexp = "^[\\p{sc=Han}\\p{sc=Hiragana}\\p{sc=Katakana}。、「」？！〜]+$",
-            message = "Only kanji, hiragana or katakana")
+    @Pattern(regexp = "^[\\p{sc=Han}\\p{sc=Hiragana}\\p{sc=Katakana}。.、「」？！〜（）]+$",
+            message = "Only kanji, hiragana or katakana　or symbols 。.、「」？！〜（）")
     private String formula;
 
     @ApiModelProperty(notes = "The example of using grammar")

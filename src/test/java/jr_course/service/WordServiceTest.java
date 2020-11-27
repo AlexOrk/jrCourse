@@ -74,13 +74,6 @@ public class WordServiceTest {
         assertEquals(expectedWord, actualWord);
     }
 
-//    @Test(expected = DataNotFoundException.class)
-//    public void findById_ExceptionTest() {
-//        Word expectedWord = null;
-//        when(wordRepository.findById(1)).thenReturn(java.util.Optional.of(expectedWord));
-//        wordService.findById(1);
-//    }
-
     @Test
     public void findAllByUserId_test() {
         Word word1 = new Word();

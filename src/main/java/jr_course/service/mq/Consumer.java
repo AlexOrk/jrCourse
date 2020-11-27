@@ -85,10 +85,8 @@ public class Consumer {
         Word word = objectMapper.readValue(message, Word.class);
 
         if (!isCorrectWord(word)) throw new IncorrectDataInputException("Incorrect word data input.");
-        else {
-            wordRepository.save(word);
-            logger.info("Word was saved!");
-        }
+        wordRepository.save(word);
+        logger.info("Word was saved!");
     }
 
     @RabbitListener(queues = "q.post.note.work")

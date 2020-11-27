@@ -2,7 +2,6 @@ package jr_course.service;
 
 import jr_course.dao.GrammarRepository;
 import jr_course.entity.Grammar;
-import jr_course.entity.Word;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,7 +15,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
